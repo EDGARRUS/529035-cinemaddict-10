@@ -1,11 +1,44 @@
-export const createNavMenuTemplate = () => {
+const filterNames = [
+  `Watchlist`, `History`, `Favorites`,
+];
+
+const filterNamesMap = {
+  "Watchlist": `addToWatchlist`,
+  "History": `addToHistory`,
+  "Favorites": `addToFavorite`,
+};
+
+const generateFilters = () => {
+  return filterNames.map((filter) => {
+    return {
+      name: filter,
+      href: filter,
+      isActive: false,
+    };
+  });
+};
+
+const countFilmsByFilter = (films, filter) => {
+  const filmsByFilter = films.filter((film) => {
+    return film[filter];
+  });
+  return filmsByFilter.length + 1;
+};
+
+const createNavMenuMarkup = (filmData, filter, isActive) => {
+  return `<a href="#${filter.name.toLowerCase()}" class="main-navigation__item ${isActive ? `main-navigation__item--active` : ``}">${filter.name} <span class="main-navigation__item-count">${countFilmsByFilter(filmData, filterNamesMap[filter.name])}</span></a>`;
+};
+
+export const createNavMenuTemplate = (filmData, filters) => {
+  const filtersMarkup = filters.map((filter, i) => createNavMenuMarkup(filmData, filter, i === 0)).join(`\n`);
+
   return (
     `<nav class="main-navigation">
     <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-    <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">13</span></a>
-    <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">4</span></a>
-    <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">8</span></a>
+    ${filtersMarkup}
     <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>
   </nav>`
   );
 };
+
+export {generateFilters};

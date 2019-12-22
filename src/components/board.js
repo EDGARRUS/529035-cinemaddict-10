@@ -29,4 +29,10 @@ const createFilmSectionTemplate = (title, id) => {
   );
 };
 
-export {createFilmBoardTemplate, createFilmListTemplate, createFilmSectionTemplate};
+const createStatFooterTemplate = (array) => {
+  return (
+    `<p>${array.length} movies inside</p>`
+  );
+};
+
+export {createFilmBoardTemplate, createFilmListTemplate, createFilmSectionTemplate, createStatFooterTemplate};
