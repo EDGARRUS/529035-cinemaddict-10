@@ -1,17 +1,23 @@
-const createPopupFilmCardCommentTemplate = (filmComment) => {
-  return `<li class="film-details__comment">
+export const createPopupFilmCardCommentTemplate = (film) => {
+
+  let PopupFilmCardCommentMarkup = ``;
+  film.comment.forEach((comment) => {
+    PopupFilmCardCommentMarkup += `<li class="film-details__comment">
     <span class="film-details__comment-emoji">
-    <img src="${filmComment.emotion}" width="55" height="55" alt="emoji">
+    <img src="${comment.emotion}" width="55" height="55" alt="emoji">
     </span>
     <div>
-    <p class="film-details__comment-text">${filmComment.text}</p>
+    <p class="film-details__comment-text">${comment.text}</p>
   <p class="film-details__comment-info">
-    <span class="film-details__comment-author">${filmComment.name}</span>
-  <span class="film-details__comment-day">${filmComment.date}</span>
+    <span class="film-details__comment-author">${comment.name}</span>
+  <span class="film-details__comment-day">${comment.date}</span>
   <button class="film-details__comment-delete">Delete</button>
     </p>
     </div>
     </li>`;
+  });
+
+  return PopupFilmCardCommentMarkup;
 };
 
 export const createPopupFilmCardTemplate = (film) => {
@@ -97,9 +103,7 @@ export const createPopupFilmCardTemplate = (film) => {
         <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.comment.length + 1}</span></h3>
 
         <ul class="film-details__comments-list">
-         ${film.comment.slice().forEach((filmComment) => {
-      createPopupFilmCardCommentTemplate(filmComment);
-    })}
+         
         </ul>
 
         <div class="film-details__new-comment">

@@ -9,7 +9,7 @@ import {createSortTemplate} from './components/sort-menu';
 import {createUserTemplate} from './components/user';
 import {createFilmCardTemplate, generateFilms} from './components/film-card.js';
 import {createShowMoreButtonTemplate} from './components/show-more-button.js';
-import {createPopupFilmCardTemplate} from './components/film-card-popup';
+import {createPopupFilmCardTemplate, createPopupFilmCardCommentTemplate} from './components/film-card-popup';
 
 const FILM_COUNT_ON_START = 5;
 const FILM_COUNT_BY_BUTTON = 5;
@@ -71,6 +71,8 @@ if (filmsDataWithComments) {
 
 render(document.querySelector(`.footer__statistics`), createStatFooterTemplate(filmsData), `beforeend`);
 render(document.querySelector(`body`), createPopupFilmCardTemplate(filmsData[1]), `beforeend`);
+
+render(document.querySelector(`.film-details__comments-list`), createPopupFilmCardCommentTemplate(filmsData[1]), `beforeend`);
 
 
 const showMoreButton = document.querySelector(`.films-list__show-more`);
