@@ -1,4 +1,6 @@
-export const createPopupFilmCardCommentTemplate = (film) => {
+import {createElement} from "./util";
+
+const createPopupFilmCardCommentTemplate = (film) => {
 
   let PopupFilmCardCommentMarkup = ``;
   film.comment.forEach((comment) => {
@@ -20,9 +22,9 @@ export const createPopupFilmCardCommentTemplate = (film) => {
   return PopupFilmCardCommentMarkup;
 };
 
-export const createPopupFilmCardTemplate = (film) => {
+const createPopupFilmCardTemplate = (film) => {
   return (
-    `<section class="film-details visually-hidden">
+    `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
     <div class="form-details__top-container">
       <div class="film-details__close">
@@ -142,3 +144,50 @@ export const createPopupFilmCardTemplate = (film) => {
   );
 
 };
+
+
+export class FilmCardPopupComponent {
+  constructor(film) {
+    this._element = null;
+    this._film = film;
+  }
+
+  getTemplate() {
+    return createPopupFilmCardTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
+export class FilmCardPopupCommentComponent {
+  constructor(film) {
+    this._element = null;
+    this._film = film;
+  }
+
+  getTemplate() {
+    return createPopupFilmCardCommentTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

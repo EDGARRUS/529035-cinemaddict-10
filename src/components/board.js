@@ -1,30 +1,9 @@
+import {createElement} from "./util";
+
 const createFilmBoardTemplate = () => {
   return (
     `<section class="films">
 
-</section>`
-  );
-};
-
-const createFilmListTemplate = () => {
-  return (
-    `<section class="films-list">
-      <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
-
-      <div class="films-list__container">    
-</div>
-</section>
-`
-  );
-};
-
-const createFilmSectionTemplate = (title, id) => {
-  return (
-    `<section id="${id}" class="films-list--extra">
-      <h2 class="films-list__title">${title}</h2>
-
-      <div class="films-list__container">
-</div>
 </section>`
   );
 };
@@ -35,4 +14,47 @@ const createStatFooterTemplate = (array) => {
   );
 };
 
-export {createFilmBoardTemplate, createFilmListTemplate, createFilmSectionTemplate, createStatFooterTemplate};
+export class BoardComponent {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmBoardTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
+export class StatFooterComponent {
+  constructor(stat) {
+    this._element = null;
+    this._stat = stat;
+  }
+
+  getTemplate() {
+    return createStatFooterTemplate(this._stat);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

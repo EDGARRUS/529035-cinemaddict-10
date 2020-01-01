@@ -1,3 +1,5 @@
+import {createElement} from './util.js';
+
 const filterNames = [
   `Watchlist`, `History`, `Favorites`,
 ];
@@ -29,7 +31,7 @@ const createNavMenuMarkup = (filmData, filter, isActive) => {
   return `<a href="#${filter.name.toLowerCase()}" class="main-navigation__item ${isActive ? `main-navigation__item--active` : ``}">${filter.name} <span class="main-navigation__item-count">${countFilmsByFilter(filmData, filterNamesMap[filter.name])}</span></a>`;
 };
 
-export const createNavMenuTemplate = (filmData, filters) => {
+const createNavMenuTemplate = (filmData, filters) => {
   const filtersMarkup = filters.map((filter, i) => createNavMenuMarkup(filmData, filter, i === 0)).join(`\n`);
 
   return (
@@ -40,5 +42,29 @@ export const createNavMenuTemplate = (filmData, filters) => {
   </nav>`
   );
 };
+
+export class NavMenuComponent {
+  constructor(filmData, filters) {
+    this._element = null;
+    this._filmData = filmData;
+    this._filters = filters;
+  }
+
+  getTemplate() {
+    return createNavMenuTemplate(this._filmData, this._filters);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 
 export {generateFilters};

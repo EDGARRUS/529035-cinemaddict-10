@@ -1,3 +1,5 @@
+import {createElement} from "./util";
+
 const mokupTitle = [`Bad boys`, `Good boys`, `Dirty work`, `Revenge`, `Control`, `Invisible`, `Mass Effect`, `Dragon Age`, `Witch`, `Unreal Tournament`, `Easy kill`, `About me`, `Strong Evil`, `Timeout`, `Russia 2019`];
 
 const mokupDescription = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`.split(`.`);
@@ -101,7 +103,7 @@ export const generateFilms = (count) => {
     .map(generateFilm);
 };
 
-export const createFilmCardTemplate = (film) => {
+const createFilmCardTemplate = (film) => {
   return (
     `<article class="film-card">
           <h3 class="film-card__title">${film.title}</h3>
@@ -122,3 +124,26 @@ export const createFilmCardTemplate = (film) => {
         </article>`
   );
 };
+
+export class FilmCardComponent {
+  constructor(film) {
+    this._element = null;
+    this._film = film;
+  }
+
+  getTemplate() {
+    return createFilmCardTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
