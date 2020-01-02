@@ -1,4 +1,4 @@
-import {createElement} from "./util";
+import AbstractComponent from "./abstract-component";
 
 const createUserTemplate = (filmsInHistory) => {
   return (
@@ -9,25 +9,13 @@ const createUserTemplate = (filmsInHistory) => {
   );
 };
 
-export class UserComponent {
+export class UserComponent extends AbstractComponent {
   constructor(filmsInHistory) {
-    this._element = null;
+    super();
     this._filmsInHistory = filmsInHistory;
   }
 
   getTemplate() {
     return createUserTemplate(this._filmsInHistory);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

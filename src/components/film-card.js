@@ -1,4 +1,4 @@
-import {createElement} from "./util";
+import AbstractComponent from "./abstract-component";
 
 const mokupTitle = [`Bad boys`, `Good boys`, `Dirty work`, `Revenge`, `Control`, `Invisible`, `Mass Effect`, `Dragon Age`, `Witch`, `Unreal Tournament`, `Easy kill`, `About me`, `Strong Evil`, `Timeout`, `Russia 2019`];
 
@@ -125,9 +125,9 @@ const createFilmCardTemplate = (film) => {
   );
 };
 
-export class FilmCardComponent {
+export class FilmCardComponent extends AbstractComponent{
   constructor(film) {
-    this._element = null;
+    super();
     this._film = film;
   }
 
@@ -135,15 +135,9 @@ export class FilmCardComponent {
     return createFilmCardTemplate(this._film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  SetOpenFilmClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, handler);
   }
 }
