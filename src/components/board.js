@@ -14,13 +14,13 @@ const createStatFooterTemplate = (array) => {
   );
 };
 
-export class BoardComponent extends AbstractComponent{
+export class BoardComponent extends AbstractComponent {
   getTemplate() {
     return createFilmBoardTemplate();
   }
 }
 
-export class StatFooterComponent extends AbstractComponent{
+export class StatFooterComponent extends AbstractComponent {
   constructor(stat) {
     super();
     this._stat = stat;
