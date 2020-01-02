@@ -1,4 +1,4 @@
-import {createElement} from "./util";
+import AbstractComponent from "./abstract-component";
 
 const createFilmListTemplate = () => {
   return (
@@ -24,48 +24,20 @@ const createFilmSectionTemplate = (title, id) => {
 };
 
 
-export class FilmsListComponent {
-  constructor() {
-    this._element = null;
-  }
-
+export class FilmsListComponent extends AbstractComponent {
   getTemplate() {
     return createFilmListTemplate();
   }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }
 
-export class FilmsSectionComponent {
+export class FilmsSectionComponent extends AbstractComponent {
   constructor(title, id) {
-    this._element = null;
+    super();
     this._title = title;
     this._id = id;
   }
 
   getTemplate() {
     return createFilmSectionTemplate(this._title, this._id);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

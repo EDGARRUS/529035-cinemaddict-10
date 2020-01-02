@@ -1,4 +1,4 @@
-import {createElement} from './util.js';
+import AbstractComponent from "./abstract-component";
 
 const filterNames = [
   `Watchlist`, `History`, `Favorites`,
@@ -43,27 +43,15 @@ const createNavMenuTemplate = (filmData, filters) => {
   );
 };
 
-export class NavMenuComponent {
+export class NavMenuComponent extends AbstractComponent {
   constructor(filmData, filters) {
-    this._element = null;
+    super();
     this._filmData = filmData;
     this._filters = filters;
   }
 
   getTemplate() {
     return createNavMenuTemplate(this._filmData, this._filters);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

@@ -1,4 +1,4 @@
-import {createElement} from "./util";
+import AbstractComponent from "./abstract-component";
 
 const createFilmBoardTemplate = () => {
   return (
@@ -14,47 +14,19 @@ const createStatFooterTemplate = (array) => {
   );
 };
 
-export class BoardComponent {
-  constructor() {
-    this._element = null;
-  }
-
+export class BoardComponent extends AbstractComponent{
   getTemplate() {
     return createFilmBoardTemplate();
   }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }
 
-export class StatFooterComponent {
+export class StatFooterComponent extends AbstractComponent{
   constructor(stat) {
-    this._element = null;
+    super();
     this._stat = stat;
   }
 
   getTemplate() {
     return createStatFooterTemplate(this._stat);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,4 +1,4 @@
-import {createElement} from "./util";
+import AbstractComponent from "./abstract-component";
 
 const createPopupFilmCardCommentTemplate = (film) => {
 
@@ -146,9 +146,9 @@ const createPopupFilmCardTemplate = (film) => {
 };
 
 
-export class FilmCardPopupComponent {
+export class FilmCardPopupComponent extends AbstractComponent {
   constructor(film) {
-    this._element = null;
+    super();
     this._film = film;
   }
 
@@ -156,38 +156,18 @@ export class FilmCardPopupComponent {
     return createPopupFilmCardTemplate(this._film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  SetCloseButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler)
   }
 }
 
-export class FilmCardPopupCommentComponent {
+export class FilmCardPopupCommentComponent extends AbstractComponent {
   constructor(film) {
-    this._element = null;
+    super();
     this._film = film;
   }
 
   getTemplate() {
     return createPopupFilmCardCommentTemplate(this._film);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
