@@ -10,8 +10,7 @@ import {generateFilms} from "./components/film-card";
 const filmsData = generateFilms(15);
 const siteMainElement = document.querySelector(`.main`);
 
-const boardComponent = new BoardComponent();
-render(siteMainElement, boardComponent, RenderPosition.BEFOREEND);
+
 
 const filters = generateFilters();
 const navMenuComponent = new NavMenuComponent(filmsData, filters);
@@ -19,6 +18,8 @@ render(siteMainElement, navMenuComponent, RenderPosition.BEFOREEND);
 
 const sortMenuComponent = new SortMenuComponent();
 render(siteMainElement, sortMenuComponent, RenderPosition.BEFOREEND);
+const boardComponent = new BoardComponent();
+render(siteMainElement, boardComponent, RenderPosition.BEFOREEND);
 
 const pageController = new PageController(boardComponent);
 pageController.render(filmsData);
