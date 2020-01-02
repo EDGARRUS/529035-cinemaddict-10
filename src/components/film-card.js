@@ -125,7 +125,7 @@ const createFilmCardTemplate = (film) => {
   );
 };
 
-export class FilmCardComponent extends AbstractComponent{
+export class FilmCardComponent extends AbstractComponent {
   constructor(film) {
     super();
     this._film = film;
@@ -135,7 +135,7 @@ export class FilmCardComponent extends AbstractComponent{
     return createFilmCardTemplate(this._film);
   }
 
-  SetOpenFilmClickHandler(handler) {
+  setOpenFilmClickHandler(handler) {
     this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, handler);
     this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, handler);
     this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, handler);
