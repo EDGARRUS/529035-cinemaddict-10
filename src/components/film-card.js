@@ -57,8 +57,8 @@ const generateDuration = () => {
 };
 
 const generateRating = () => {
-  const rate = 10 * Math.random();
-  return (parseInt(rate * 10, 10)) / 10;
+  const rate = 1 + 10 * Math.random();
+  return (parseInt(rate, 10));
 };
 
 
@@ -69,6 +69,7 @@ export const generateFilm = () => {
     style: getRandomArrayItem(filmStyle),
     poster: getRandomArrayItem(mokupImages),
     rating: generateRating(),
+    userRating: generateRating(),
     duration: generateDuration(),
     releaseDate: getRandomIntegerNumber(1930, 200),
     commentsNumber: getRandomIntegerNumber(0, 20),
@@ -103,7 +104,18 @@ export const generateFilms = (count) => {
     .map(generateFilm);
 };
 
+const createButtonMarkup = (name, className, isActive) => {
+  return (
+    `<button class="film-card__controls-item ${isActive ? `film-card__controls-item--active` : ``} button ${className}">${name}</button>`
+  );
+};
+
 const createFilmCardTemplate = (film) => {
+
+  const watchlistButton = createButtonMarkup(`Add to watchlist`, `film-card__controls-item--add-to-watchlist`, film.addToWatchlist);
+  const historyButton = createButtonMarkup(`Mark as watched`, `film-card__controls-item--mark-as-watched`, film.addToHistory);
+  const favoriteButton = createButtonMarkup(`Mark as favorite`, `film-card__controls-item--favorite`, film.addToFavorite);
+
   return (
     `<article class="film-card">
           <h3 class="film-card__title">${film.title}</h3>
@@ -113,13 +125,13 @@ const createFilmCardTemplate = (film) => {
             <span class="film-card__duration">${film.duration}</span>
             <span class="film-card__genre">${film.style}</span>
           </p>
-          <img src="./images/posters/the-dance-of-life.jpg" alt="" class="film-card__poster">
+          <img src="${film.poster}" alt="" class="film-card__poster">
           <p class="film-card__description">${film.description}</p>
           <a class="film-card__comments">${film.commentsNumber} comments</a>
           <form class="film-card__controls">
-            <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-            <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
-            <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
+            ${watchlistButton}
+            ${historyButton}
+            ${favoriteButton}
           </form>
         </article>`
   );
@@ -140,4 +152,20 @@ export class FilmCardComponent extends AbstractComponent {
     this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, handler);
     this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, handler);
   }
+
+  setWatchlistButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
+      .addEventListener(`click`, handler);
+  }
+
+  setHistoryButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
+      .addEventListener(`click`, handler);
+  }
+
+  setFavoriteButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--favorite`)
+      .addEventListener(`click`, handler);
+  }
+
 }

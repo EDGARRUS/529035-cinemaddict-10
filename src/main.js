@@ -2,7 +2,7 @@ import {RenderPosition, render} from './components/utils/render.js';
 import {BoardComponent, StatFooterComponent} from './components/board.js';
 import {NavMenuComponent, generateFilters} from './components/nav-menu.js';
 import {UserComponent} from './components/user';
-import {PageController} from "./components/controllers/board";
+import {PageController} from "./components/controllers/page";
 import {generateFilms} from "./components/film-card";
 
 
@@ -14,11 +14,13 @@ const filters = generateFilters();
 const navMenuComponent = new NavMenuComponent(filmsData, filters);
 render(siteMainElement, navMenuComponent, RenderPosition.BEFOREEND);
 
-const boardComponent = new BoardComponent();
 
-const pageController = new PageController(boardComponent);
+
+const pageController = new PageController(siteMainElement);
 pageController.render(filmsData);
 
+
+// Отрисовка пользователя
 const siteHeaderElement = document.querySelector(`.header`);
 const filmsInHistory = filmsData.filter((film) => {
   return film.addToHistory;
@@ -27,7 +29,7 @@ const filmsInHistory = filmsData.filter((film) => {
 const userComponent = new UserComponent(filmsInHistory);
 render(siteHeaderElement, userComponent, `beforeend`);
 
-
+// Отрисовка футера
 render(document.querySelector(`.footer__statistics`), new StatFooterComponent(filmsData), RenderPosition.BEFOREEND);
 
 
