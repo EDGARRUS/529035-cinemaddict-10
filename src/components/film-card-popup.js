@@ -1,4 +1,5 @@
 import AbstractComponent from "./abstract-component";
+import AbstractSmartComponent from "./abstract-smart-component";
 
 const createPopupFilmCardCommentTemplate = (film) => {
 
@@ -22,7 +23,63 @@ const createPopupFilmCardCommentTemplate = (film) => {
   return PopupFilmCardCommentMarkup;
 };
 
+const createButtonMarkup = (name, className, text, isActive) => {
+  return (
+    `<input type="checkbox" ${isActive ? `
+checked="checked"` : ``} class="film-details__control-input visually-hidden" id="${name}" name="${name}">
+        <label for="${name}" class="film-details__control-label film-details__control-label--watchlist">${text}</label>`
+  );
+};
+
+
+const createRateFormMarkup = (film) => {
+
+  const createRateInputMarkup = () => {
+    const rateArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let markup = ``;
+
+    rateArray.forEach((rate) => {
+      return markup += `<input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${rate}" id="rating-${rate}" ${film.userRating === rate ? `checked` : ``}>
+              <label class="film-details__user-rating-label" for="rating-${rate}">${rate}</label>`;
+    });
+
+    return markup;
+  };
+
+  return `<div class="form-details__middle-container">
+      <section class="film-details__user-rating-wrap">
+        <div class="film-details__user-rating-controls">
+          <button class="film-details__watched-reset" type="button">Undo</button>
+        </div>
+
+        <div class="film-details__user-score">
+          <div class="film-details__user-rating-poster">
+            <img src="${film.poster}" alt="film-poster" class="film-details__user-rating-img">
+          </div>
+
+          <section class="film-details__user-rating-inner">
+            <h3 class="film-details__user-rating-title">${film.title}</h3>
+
+            <p class="film-details__user-rating-feelings">How you feel it?</p>
+
+            <div class="film-details__user-rating-score">
+              ${createRateInputMarkup()}
+
+            </div>
+          </section>
+        </div>
+      </section>
+    </div>`;
+
+};
+
+
 const createPopupFilmCardTemplate = (film) => {
+
+  const watchlistButton = createButtonMarkup(`watchlist`, `film-card__controls-item--add-to-watchlist`, `Add to watchlist`, film.addToWatchlist);
+  const historyButton = createButtonMarkup(`watched`, `film-card__controls-item--mark-as-watched`, `Already watched`, film.addToHistory);
+  const favoriteButton = createButtonMarkup(`favorite`, `film-card__controls-item--favorite`, `Add to favorite`, film.addToFavorite);
+
   return (
     `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
@@ -32,7 +89,7 @@ const createPopupFilmCardTemplate = (film) => {
       </div>
       <div class="film-details__info-wrap">
         <div class="film-details__poster">
-          <img class="film-details__poster-img" src="./images/posters/the-great-flamarion.jpg" alt="">
+          <img class="film-details__poster-img" src="${film.poster}" alt="">
 
           <p class="film-details__age">${film.age}</p>
         </div>
@@ -46,6 +103,7 @@ const createPopupFilmCardTemplate = (film) => {
 
             <div class="film-details__rating">
               <p class="film-details__total-rating">${film.rating}</p>
+              ${film.userRating ? `<p class="film-details__user-rating">Your rate ${film.userRating}</p>` : ``}
             </div>
           </div>
 
@@ -89,16 +147,14 @@ const createPopupFilmCardTemplate = (film) => {
       </div>
 
       <section class="film-details__controls">
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
-        <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
-
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
-        <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
-
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
-        <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
+            ${watchlistButton}
+            ${historyButton}
+            ${favoriteButton}
       </section>
     </div>
+    
+    
+    ${film.addToHistory ? createRateFormMarkup(film) : ``}
 
     <div class="form-details__bottom-container">
       <section class="film-details__comments-wrap">
@@ -146,10 +202,12 @@ const createPopupFilmCardTemplate = (film) => {
 };
 
 
-export class FilmCardPopupComponent extends AbstractComponent {
+export class FilmCardPopupComponent extends AbstractSmartComponent {
   constructor(film) {
     super();
     this._film = film;
+    this._closeButtonHandler = null;
+    this._subscribeOnEvents();
   }
 
   getTemplate() {
@@ -158,6 +216,38 @@ export class FilmCardPopupComponent extends AbstractComponent {
 
   setCloseButtonClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+
+    this._closeButtonHandler = handler;
+  }
+
+  setRateValueButtonClickHandler(handler) {
+    this.getElement().querySelectorAll(`.film-details__user-rating-input`).forEach((input) => input.addEventListener(`change`, handler));
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
+  recoveryListeners() {
+    this.setCloseButtonClickHandler(this._closeButtonHandler);
+    this._subscribeOnEvents();
+  }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+
+    element.querySelector(`#watched`)
+      .addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+        this._film.addToWatchlist = !this._film.addToWatchlist;
+
+        if (!this._film.addToWatchlist) {
+          this._film.userRating = null;
+        }
+
+        this.rerender();
+      });
+
   }
 }
 
