@@ -1,5 +1,5 @@
-import {FilmCardComponent} from "../film-card";
-import {FilmCardPopupCommentComponent, FilmCardPopupComponent} from "../film-card-popup";
+import {FilmCardComponent} from "../components/film-card";
+import {FilmCardPopupCommentComponent, FilmCardPopupComponent} from "../components/film-card-popup";
 import {remove, replace, render, RenderPosition} from "../utils/render";
 
 const Mode = {
@@ -12,7 +12,7 @@ export class FilmCardController {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
-    console.log(this._onViewChange);
+
 
     this._mode = Mode.DEFAULT;
 
@@ -22,9 +22,9 @@ export class FilmCardController {
   }
 
   setDefaultView() {
-    console.log('Функция дефалт вью');
+
     if (this._mode !== Mode.DEFAULT) {
-      console.log('Что то происходит');
+
       remove(this._filmCardPopupComponent);
     }
   }
