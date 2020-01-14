@@ -260,4 +260,8 @@ export class FilmCardPopupCommentComponent extends AbstractComponent {
   getTemplate() {
     return createPopupFilmCardCommentTemplate(this._film);
   }
+
+  setDeleteButtonClickHandler(handler) {
+
+  }
 }

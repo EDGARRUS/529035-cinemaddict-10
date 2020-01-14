@@ -48,4 +48,12 @@ export default class FilmsModel {
   setDataChangeHandler(handler) {
     this._dataChangeHandlers.push(handler);
   }
+
+  addComment() {
+
+  }
+
+  deleteComment() {
+
+  }
 }
