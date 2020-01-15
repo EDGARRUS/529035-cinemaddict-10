@@ -1,6 +1,7 @@
-import {FilmCardComponent} from "../film-card";
-import {FilmCardPopupCommentComponent, FilmCardPopupComponent} from "../film-card-popup";
+import {FilmCardComponent} from "../components/film-card";
+import {FilmCardPopupCommentComponent, FilmCardPopupComponent} from "../components/film-card-popup";
 import {remove, replace, render, RenderPosition} from "../utils/render";
+import {FilmComment} from "./film-comment";
 
 const Mode = {
   DEFAULT: `default`,
@@ -12,7 +13,7 @@ export class FilmCardController {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
-    console.log(this._onViewChange);
+
 
     this._mode = Mode.DEFAULT;
 
@@ -22,9 +23,9 @@ export class FilmCardController {
   }
 
   setDefaultView() {
-    console.log('Функция дефалт вью');
+
     if (this._mode !== Mode.DEFAULT) {
-      console.log('Что то происходит');
+
       remove(this._filmCardPopupComponent);
     }
   }
@@ -54,6 +55,7 @@ export class FilmCardController {
       }));
     });
 
+
     const filmPopupClose = () => {
       remove(this._filmCardPopupComponent);
     };
@@ -70,7 +72,20 @@ export class FilmCardController {
       this._onViewChange();
       this._mode = Mode.POPUP;
       render(document.querySelector(`body`), this._filmCardPopupComponent, RenderPosition.BEFOREEND);
-      render(this._filmCardPopupComponent.getElement().querySelector(`.film-details__comments-list`), this._filmCardPopupCommentComponent, RenderPosition.BEFOREEND);
+
+      const filmCommentController = new FilmComment(this._filmCardPopupComponent.getElement().querySelector(`.film-details__comments-wrap`), (controller, oldData, newData) => {
+        if (oldData === null) {
+          film.comment.push(newData);
+        }
+
+        if (newData === null) {
+          film.comment = film.comment.filter((_comment, order) => order !== oldData);
+        }
+
+        controller.rerender(film.comment);
+      });
+
+      filmCommentController.render(film.comment);
 
       this._filmCardPopupComponent.setCloseButtonClickHandler(filmPopupClose);
       document.addEventListener(`keydown`, onEscKeyDown);

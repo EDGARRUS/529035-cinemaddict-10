@@ -1,23 +1,29 @@
-import {RenderPosition, render} from './components/utils/render.js';
+import {RenderPosition, render} from './utils/render.js';
 import {BoardComponent, StatFooterComponent} from './components/board.js';
-import {NavMenuComponent, generateFilters} from './components/nav-menu.js';
+import {NavMenuComponent} from './components/nav-menu.js';
 import {UserComponent} from './components/user';
-import {PageController} from "./components/controllers/page";
+import {PageController} from "./controllers/page";
 import {generateFilms} from "./components/film-card";
+import FilmsModel from './models/films.js';
+import {FilterComponent} from "./components/filter";
+import {FilterType, FilterController} from "./controllers/filter";
 
 
-const filmsData = generateFilms(15);
+
+
 const siteMainElement = document.querySelector(`.main`);
 
-
-const filters = generateFilters();
-const navMenuComponent = new NavMenuComponent(filmsData, filters);
+const navMenuComponent = new NavMenuComponent();
 render(siteMainElement, navMenuComponent, RenderPosition.BEFOREEND);
+const filmsData = generateFilms(15);
+const filmsModel = new FilmsModel();
+filmsModel.setFilms(filmsData);
 
+const filterController = new FilterController(navMenuComponent.getElement(), filmsModel);
+filterController.render();
 
-
-const pageController = new PageController(siteMainElement);
-pageController.render(filmsData);
+const pageController = new PageController(siteMainElement, filmsModel);
+pageController.render();
 
 
 // Отрисовка пользователя

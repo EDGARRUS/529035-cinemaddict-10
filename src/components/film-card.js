@@ -64,6 +64,7 @@ const generateRating = () => {
 
 export const generateFilm = () => {
   return {
+    id: String(new Date() + Math.random()),
     title: getRandomArrayItem(mokupTitle),
     description: generateDescription(),
     style: getRandomArrayItem(filmStyle),
