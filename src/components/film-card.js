@@ -107,7 +107,7 @@ export const generateFilms = (count) => {
 
 const createButtonMarkup = (name, className, isActive) => {
   return (
-    `<button class="film-card__controls-item ${isActive ? `film-card__controls-item--active` : ``} button ${className}">${name}</button>`
+    `<button type="button" class="film-card__controls-item ${isActive ? `film-card__controls-item--active` : ``} button ${className}">${name}</button>`
   );
 };
 
@@ -128,7 +128,7 @@ const createFilmCardTemplate = (film) => {
           </p>
           <img src="${film.poster}" alt="" class="film-card__poster">
           <p class="film-card__description">${film.description}</p>
-          <a class="film-card__comments">${film.commentsNumber} comments</a>
+          <a class="film-card__comments">${film.commentsId.length} comments</a>
           <form class="film-card__controls">
             ${watchlistButton}
             ${historyButton}

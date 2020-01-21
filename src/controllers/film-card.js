@@ -2,6 +2,8 @@ import {FilmCardComponent} from "../components/film-card";
 import {FilmCardPopupCommentComponent, FilmCardPopupComponent} from "../components/film-card-popup";
 import {remove, replace, render, RenderPosition} from "../utils/render";
 import {FilmComment} from "./film-comment";
+import API from "../api";
+import FilmModel from "../models/film"
 
 const Mode = {
   DEFAULT: `default`,
@@ -38,21 +40,24 @@ export class FilmCardController {
     this._filmCardPopupCommentComponent = new FilmCardPopupCommentComponent(film);
 
     this._filmCardComponent.setWatchlistButtonClickHandler(() => {
-      this._onDataChange(this, film, Object.assign({}, film, {
-        addToWatchlist: !film.addToWatchlist,
-      }));
+      const newFilm = FilmModel.clone(film);
+      newFilm.addToWatchlist = !film.addToWatchlist;
+      this._onDataChange(this, film, newFilm);
+      console.log('Событие клика полностью отработало')
     });
 
     this._filmCardComponent.setHistoryButtonClickHandler(() => {
-      this._onDataChange(this, film, Object.assign({}, film, {
-        addToHistory: !film.addToHistory,
-      }));
+      const newFilm = FilmModel.clone(film);
+      newFilm.addToHistory = !film.addToHistory;
+      this._onDataChange(this, film, newFilm);
+      console.log('Событие клика полностью отработало')
     });
 
     this._filmCardComponent.setFavoriteButtonClickHandler(() => {
-      this._onDataChange(this, film, Object.assign({}, film, {
-        addToFavorite: !film.addToFavorite,
-      }));
+      const newFilm = FilmModel.clone(film);
+      newFilm.addToFavorite = !film.addToFavorite;
+      this._onDataChange(this, film, newFilm);
+      console.log('Событие клика полностью отработало')
     });
 
 
@@ -73,6 +78,10 @@ export class FilmCardController {
       this._mode = Mode.POPUP;
       render(document.querySelector(`body`), this._filmCardPopupComponent, RenderPosition.BEFOREEND);
 
+      const AUTHORIZATION = `Basic eo0w590ik29889a`;
+      const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
+      const api = new API(END_POINT, AUTHORIZATION);
+
       const filmCommentController = new FilmComment(this._filmCardPopupComponent.getElement().querySelector(`.film-details__comments-wrap`), (controller, oldData, newData) => {
         if (oldData === null) {
           film.comment.push(newData);
@@ -85,7 +94,7 @@ export class FilmCardController {
         controller.rerender(film.comment);
       });
 
-      filmCommentController.render(film.comment);
+      api.getFilmComments(film.id).then((data) => filmCommentController.render(data));
 
       this._filmCardPopupComponent.setCloseButtonClickHandler(filmPopupClose);
       document.addEventListener(`keydown`, onEscKeyDown);
@@ -94,7 +103,9 @@ export class FilmCardController {
     this._filmCardComponent.setOpenFilmClickHandler(openFilmPopup);
 
     if (oldFilmCardComponent) {
+
       replace(this._filmCardComponent, oldFilmCardComponent);
+      debugger;
     } else {
       render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
     }

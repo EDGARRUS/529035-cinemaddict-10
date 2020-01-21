@@ -49,11 +49,4 @@ export default class FilmsModel {
     this._dataChangeHandlers.push(handler);
   }
 
-  addComment() {
-
-  }
-
-  deleteComment() {
-
-  }
 }
