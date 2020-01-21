@@ -1,6 +1,5 @@
 export default class FilmModel {
   constructor(data) {
-    console.log(data);
     this.id = data[`id`];
     this.title = data[`film_info`][`title`];
     this.altTitle = data[`film_info`][`alternative_title`];
@@ -75,7 +74,6 @@ export default class FilmModel {
   }
 
   static clone(data) {
-    console.log(data);
     return new FilmModel(data.toRAW());
   }
 }

@@ -4,6 +4,8 @@ import {remove, replace, render, RenderPosition} from "../utils/render";
 import {FilmComment} from "./film-comment";
 import API from "../api";
 import FilmModel from "../models/film"
+import CommentModel from "../models/comment";
+import CommentsModel from "../models/comments";
 
 const Mode = {
   DEFAULT: `default`,
@@ -76,6 +78,9 @@ export class FilmCardController {
     const openFilmPopup = () => {
       this._onViewChange();
       this._mode = Mode.POPUP;
+      this._commentsModel = new CommentsModel();
+
+
       render(document.querySelector(`body`), this._filmCardPopupComponent, RenderPosition.BEFOREEND);
 
       const AUTHORIZATION = `Basic eo0w590ik29889a`;
@@ -84,17 +89,29 @@ export class FilmCardController {
 
       const filmCommentController = new FilmComment(this._filmCardPopupComponent.getElement().querySelector(`.film-details__comments-wrap`), (controller, oldData, newData) => {
         if (oldData === null) {
-          film.comment.push(newData);
+          api.createComment(newData)
+              .then((commentModel) => {
+                this._commentsModel.addComment(commentModel);
+          });
         }
 
         if (newData === null) {
-          film.comment = film.comment.filter((_comment, order) => order !== oldData);
+          /* film.comment = film.comment.filter((_comment, order) => order !== oldData); */
+
+          api.deleteComment(oldData.id)
+            .then(() => {
+              this._commentsModel.removeComment(oldData.id);
+              /* this._updateComments(this._showingCommentsCount); */
+            });
+
+
         }
 
-        controller.rerender(film.comment);
+        controller.rerender(this._commentsModel.getCommentsAll());
       });
 
-      api.getFilmComments(film.id).then((data) => filmCommentController.render(data));
+
+      api.getFilmComments(film.id).then((data) => {this._commentsModel.setComments(data); filmCommentController.render(this._commentsModel.getCommentsAll())});
 
       this._filmCardPopupComponent.setCloseButtonClickHandler(filmPopupClose);
       document.addEventListener(`keydown`, onEscKeyDown);
