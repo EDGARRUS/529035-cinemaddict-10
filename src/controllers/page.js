@@ -9,6 +9,7 @@ import {FilmCardController} from "./film-card";
 import {BoardComponent} from "../components/board";
 import {FilterComponent} from "../components/filter";
 
+
 const FILM_COUNT_ON_START = 5;
 const FILM_COUNT_BY_BUTTON = 5;
 const FILM_TOP_RATED_COUNT = 2;
@@ -26,9 +27,10 @@ const renderFilms = (filmListElement, filmsData, onDataChange, onViewChange) => 
 };
 
 export class PageController {
-  constructor(container, filmsModel) {
+  constructor(container, filmsModel, api) {
     this._container = container;
     this._filmsModel = filmsModel;
+    this._api = api;
     this._showingFilmsCount = FILM_COUNT_ON_START;
 
     this._showedFilmControllers = [];
@@ -52,12 +54,19 @@ export class PageController {
   // Функция по обновлению данных, передается в ФильмКардКонтроллер
 
   _onDataChange(filmCardController, oldData, newData) {
+    console.log('Дата изменилась');
 
-    const isSuccess = this._filmsModel.updateFilm(oldData.id, newData);
+
+    this._api.updateFilm(oldData.id, newData)
+      .then((filmModel) => {
+        console.log('Промис сработал');
+
+    const isSuccess = this._filmsModel.updateFilm(oldData.id, filmModel);
 
     if (isSuccess) {
-      filmCardController.render(newData);
+      filmCardController.render(filmModel);
     }
+      });
 
   }
 

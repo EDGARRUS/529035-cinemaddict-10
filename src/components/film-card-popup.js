@@ -6,12 +6,12 @@ const createPopupFilmCardCommentTemplate = (comments) => {
   const commentsMarkup = comments.map((comment, i) => (
     `<li class="film-details__comment">
     <span class="film-details__comment-emoji">
-    <img src="${comment.emotion}" width="55" height="55" alt="emoji">
+    <img src="images/emoji/${comment.emotion}.png" width="55" height="55" alt="emoji">
     </span>
     <div>
-    <p class="film-details__comment-text">${comment.text}</p>
+    <p class="film-details__comment-text">${comment.comment}</p>
   <p class="film-details__comment-info">
-    <span class="film-details__comment-author">${comment.name}</span>
+    <span class="film-details__comment-author">${comment.author}</span>
   <span class="film-details__comment-day">${comment.date}</span>
   <button data-order="${i}" type="button" class="film-details__comment-delete">Delete</button>
     </p>
@@ -19,7 +19,7 @@ const createPopupFilmCardCommentTemplate = (comments) => {
     </li>`
   )).join(``);
 
-  const commentsContainerMarkop = `<ul class="film-details__comments-list">${commentsMarkup}</ul>`
+  const commentsContainerMarkup = `<ul class="film-details__comments-list">${commentsMarkup}</ul>`;
 
   const newCommentMarkup = `
     <div class="film-details__new-comment">
@@ -53,7 +53,7 @@ const createPopupFilmCardCommentTemplate = (comments) => {
         </div>
     `;
 
-  return `<div>${commentsContainerMarkop}${newCommentMarkup}</div>`;
+  return `<div>${commentsContainerMarkup}${newCommentMarkup}</div>`;
 };
 
 const createButtonMarkup = (name, className, text, isActive) => {
@@ -131,7 +131,7 @@ const createPopupFilmCardTemplate = (film) => {
           <div class="film-details__info-head">
             <div class="film-details__title-wrap">
               <h3 class="film-details__title">${film.title}</h3>
-              <p class="film-details__title-original">Original: ${film.title}</p>
+              <p class="film-details__title-original">Original: ${film.altTitle}</p>
             </div>
 
             <div class="film-details__rating">
@@ -191,7 +191,7 @@ const createPopupFilmCardTemplate = (film) => {
 
     <div class="form-details__bottom-container">
       <section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.comment.length + 1}</span></h3>
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.commentsId.length}</span></h3>
       </section>
     </div>
   </form>
