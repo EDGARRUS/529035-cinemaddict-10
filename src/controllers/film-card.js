@@ -42,7 +42,8 @@ export class FilmCardController {
     this._filmCardComponent.setWatchlistButtonClickHandler(() => {
       const newFilm = FilmModel.clone(film);
       newFilm.addToWatchlist = !film.addToWatchlist;
-      this._onDataChange(this, film, newFilm)
+      this._onDataChange(this, film, newFilm);
+      console.log('Событие клика полностью отработало')
     });
 
     this._filmCardComponent.setHistoryButtonClickHandler(() => {
@@ -55,7 +56,8 @@ export class FilmCardController {
     this._filmCardComponent.setFavoriteButtonClickHandler(() => {
       const newFilm = FilmModel.clone(film);
       newFilm.addToFavorite = !film.addToFavorite;
-      this._onDataChange(this, film, newFilm)
+      this._onDataChange(this, film, newFilm);
+      console.log('Событие клика полностью отработало')
     });
 
 
