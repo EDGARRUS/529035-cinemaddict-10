@@ -1,9 +1,10 @@
 import AbstractComponent from "./abstract-component";
 import AbstractSmartComponent from "./abstract-smart-component";
+import {formatDate, formatTime} from "../utils/date";
 
 const createPopupFilmCardCommentTemplate = (comments) => {
 
-  const commentsMarkup = comments.map((comment, i) => (
+  const commentsMarkup = comments.map((comment) => (
     `<li class="film-details__comment">
     <span class="film-details__comment-emoji">
     <img src="images/emoji/${comment.emotion}.png" width="55" height="55" alt="emoji">
@@ -13,7 +14,7 @@ const createPopupFilmCardCommentTemplate = (comments) => {
   <p class="film-details__comment-info">
     <span class="film-details__comment-author">${comment.author}</span>
   <span class="film-details__comment-day">${comment.date}</span>
-  <button data-order="${i}" type="button" class="film-details__comment-delete">Delete</button>
+  <button data-id="${comment.id}" type="button" class="film-details__comment-delete">Delete</button>
     </p>
     </div>
     </li>`
@@ -155,11 +156,11 @@ const createPopupFilmCardTemplate = (film) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${film.releaseDate}</td>
+              <td class="film-details__cell">${formatDate(film.releaseDate)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">${film.duration}</td>
+              <td class="film-details__cell">${formatTime(film.duration)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>

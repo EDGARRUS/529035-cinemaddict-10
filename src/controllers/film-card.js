@@ -89,25 +89,29 @@ export class FilmCardController {
 
       const filmCommentController = new FilmComment(this._filmCardPopupComponent.getElement().querySelector(`.film-details__comments-wrap`), (controller, oldData, newData) => {
         if (oldData === null) {
-          api.createComment(newData)
-              .then((commentModel) => {
-                this._commentsModel.addComment(commentModel);
-          });
+          console.log(new CommentModel(newData));
+          this._filmCardPopupComponent.getElement().querySelector(`.film-details__comment-input`).setAttribute(`disabled`, `true`);
+          api.createComment(new CommentModel(newData), film.id)
+              .then((comment) => {
+                this._commentsModel.addComment(comment);
+          }).then(() => {controller.rerender(this._commentsModel.getCommentsAll())});
         }
 
         if (newData === null) {
           /* film.comment = film.comment.filter((_comment, order) => order !== oldData); */
+          console.log(oldData);
 
-          api.deleteComment(oldData.id)
+
+          api.deleteComment(oldData)
             .then(() => {
-              this._commentsModel.removeComment(oldData.id);
+              this._commentsModel.removeComment(oldData);
               /* this._updateComments(this._showingCommentsCount); */
-            });
+            }).then(() => {controller.rerender(this._commentsModel.getCommentsAll())});
 
 
         }
 
-        controller.rerender(this._commentsModel.getCommentsAll());
+
       });
 
 

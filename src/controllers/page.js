@@ -51,6 +51,16 @@ export class PageController {
 
   }
 
+  hide() {
+    this._sortMenuComponent.hide();
+    this._filmsListComponent.hide();
+  }
+
+  show() {
+    this._sortMenuComponent.show();
+    this._filmsListComponent.show();
+  }
+
   // Функция по обновлению данных, передается в ФильмКардКонтроллер
 
   _onDataChange(filmCardController, oldData, newData) {

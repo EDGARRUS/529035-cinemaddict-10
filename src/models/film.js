@@ -43,7 +43,7 @@ export default class FilmModel {
         'total_rating': this.rating,
         'writers': this.writers,
         'actors': this.actors,
-        'age': this.age,
+        'age_rating': this.age,
       },
       'comments': this.commentsId,
       'user_details': {
@@ -53,15 +53,6 @@ export default class FilmModel {
         'watchlist': this.addToWatchlist,
         'watching_date': this.watchingDate
       }
-
-/*
-      'description': this.description,
-      'due_date': this.dueDate ? this.dueDate.toISOString() : null,
-      'tags': Array.from(this.tags),
-      'repeating_days': this.repeatingDays,
-      'color': this.color,
-      'is_favorite': this.isFavorite,
-      'is_archived': this.isArchive, */
     };
   }
 

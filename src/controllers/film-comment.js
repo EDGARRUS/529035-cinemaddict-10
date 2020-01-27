@@ -34,21 +34,20 @@ export class FilmComment {
   _submitCommentHandler(e) {
     if (e.keyCode === 13 && (e.metaKey || e.ctrlKey)) {
       const newComment = {
-        name: `Vasya`,
-        text: e.target.value,
-        date: `12.12.2012`,
-        emotion: `./images/emoji/smile.png`,
+        author: `RandomAuthor`,
+        comment: e.target.value,
+        date: new Date().toISOString(),
+        emotion: `smile`,
+        id: `${Math.floor(Math.random() * 1000)}`,
       };
-
-      e.target.value = ``;
 
       this._onDataChange(this, null, newComment);
     }
   }
 
   _deleteCommentHandler(e) {
-    const order = +e.target.dataset.order;
-    this._onDataChange(this, order, null);
+    const id = e.target.dataset.id;
+    this._onDataChange(this, id, null);
   }
 
 }

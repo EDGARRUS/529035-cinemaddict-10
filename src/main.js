@@ -9,6 +9,8 @@ import {PageController} from "./controllers/page";
 import FilmsModel from './models/films.js';
 import {FilterComponent} from "./components/filter";
 import {FilterType, FilterController} from "./controllers/filter";
+import {StatisticComponent} from "./components/statistic";
+import {MenuItem} from "./components/nav-menu";
 
 const AUTHORIZATION = `Basic eo0w590ik29889a`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
@@ -28,6 +30,13 @@ render(siteMainElement, navMenuComponent, RenderPosition.BEFOREEND);
 const filterController = new FilterController(navMenuComponent.getElement(), filmsModel);
 filterController.render();
 
+const dateTo = new Date();
+const dateFrom = null;
+
+const statisticComponent = new StatisticComponent(filmsModel, dateTo, dateFrom);
+render(siteMainElement, statisticComponent, RenderPosition.BEFOREEND);
+statisticComponent.hide();
+
 const pageController = new PageController(siteMainElement, filmsModel, api);
 
 api.getFilms()
@@ -35,6 +44,22 @@ api.getFilms()
     filmsModel.setFilms(films);
     pageController.render();
   });
+
+navMenuComponent.setOnChange((menuItem) => {
+  switch (menuItem) {
+    case MenuItem.STATISTIC:
+      navMenuComponent.setActiveItem(MenuItem.STATISTIC);
+      pageController.hide();
+      statisticComponent.show();
+      break;
+    default:
+      statisticComponent.hide();
+      pageController.show();
+      break;
+  }
+});
+
+
 
 
 // Отрисовка пользователя

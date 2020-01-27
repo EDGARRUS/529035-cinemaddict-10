@@ -31,18 +31,22 @@ const API = class {
   getFilmComments(id) {
     return this._load({url: `comments/${id}`})
       .then((response) => response.json())
-      .then(CommentModel.parseComments)
+      .then(FilmModel.parseComments)
   }
 
-  createComment(comment) {
+  createComment(comment, filmId) {
+    console.log(`Создается коммент`);
+    console.log(comment.toRAW());
     return this._load({
-      url: `comments/${id}`,
+      url: `comments/${filmId}`,
       method: Method.POST,
       body: JSON.stringify(comment.toRAW()),
       headers: new Headers({'Content-Type': `application/json`})
     })
-      .then((response) => response.json())
-      .then(CommentModel.parseComment);
+      .then((response) => {console.log(`Парсится JSON`);
+        console.log(response); return response.json()})
+      .then((CommentModel) => {console.log(`Парсится модель`);
+        console.log(CommentModel[`comments`]); return CommentModel.parseComment});
   }
 
   updateFilm(id, data) {
@@ -52,13 +56,15 @@ const API = class {
       body: JSON.stringify(data.toRAW()),
       headers: new Headers({'Content-Type': `application/json`})
     })
-      .then((response) => {response.json()})
+      .then((response) => response.json())
       .then(FilmModel.parseFilm);
   }
 
-  deleteComment(id) {
-    return this._load({url: `comments/${id}`, method: Method.DELETE});
-  }
+  deleteComment(commentId) {
+    return this._load({
+      url: `comments/${commentId}`,
+      method: Method.DELETE,
+  })}
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);

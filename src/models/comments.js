@@ -16,8 +16,10 @@ export default class CommentsModel {
   }
 
   addComment(comment) {
+    console.log(`Внутри функции эдд коммент`);
+    console.log(comment);
     this._comments = [].concat(comment, this._comments);
-    this._dataChangeHandlers.forEach((handler) => handler());
+    console.log(this._comments);
   }
 
   removeComment(id) {
@@ -29,7 +31,7 @@ export default class CommentsModel {
 
     this._comments = [].concat(this._comments.slice(0, index), this._comments.slice(index + 1));
 
-    this._dataChangeHandlers.forEach((handler) => handler());
+    // this._dataChangeHandlers.forEach((handler) => handler());
 
     return true;
   }

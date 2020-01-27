@@ -1,4 +1,5 @@
 import AbstractComponent from "./abstract-component";
+import {formatDate, formatTime} from "../utils/date";
 
 const mokupTitle = [`Bad boys`, `Good boys`, `Dirty work`, `Revenge`, `Control`, `Invisible`, `Mass Effect`, `Dragon Age`, `Witch`, `Unreal Tournament`, `Easy kill`, `About me`, `Strong Evil`, `Timeout`, `Russia 2019`];
 
@@ -122,8 +123,8 @@ const createFilmCardTemplate = (film) => {
           <h3 class="film-card__title">${film.title}</h3>
           <p class="film-card__rating">${film.rating}</p>
           <p class="film-card__info">
-            <span class="film-card__year">${film.releaseDate}</span>
-            <span class="film-card__duration">${film.duration}</span>
+            <span class="film-card__year">${formatDate(film.releaseDate)}</span>
+            <span class="film-card__duration">${formatTime(film.duration)}</span>
             <span class="film-card__genre">${film.style}</span>
           </p>
           <img src="${film.poster}" alt="" class="film-card__poster">

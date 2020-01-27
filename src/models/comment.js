@@ -3,9 +3,9 @@ export default class CommentModel {
     this.id = data[`id`];
     this.author = data[`author`];
     this.comment = data[`comment`];
-    this.emotion = data[`emotion`];
+    // this.emotion = data[`emotion`];
+    this.emotion = 'smile';
     this.date = data[`date`] ? new Date(data[`date`]) : null;
-
   }
 
   toRAW() {
@@ -14,7 +14,7 @@ export default class CommentModel {
       'author': this.author,
       'comment': this.comment,
       'emotion': this.emotion,
-      'date': this.date,
+      'date': this.date ? this.date.toISOString() : null,
     };
   }
 
