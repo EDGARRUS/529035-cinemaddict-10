@@ -128,7 +128,7 @@ const createFilmCardTemplate = (film) => {
             <span class="film-card__genre">${film.style}</span>
           </p>
           <img src="${film.poster}" alt="" class="film-card__poster">
-          <p class="film-card__description">${film.description}</p>
+          <p class="film-card__description">${film.description.length > 140 ? film.description.substr(0, 140) + `...` : film.description}</p>
           <a class="film-card__comments">${film.commentsId.length} comments</a>
           <form class="film-card__controls">
             ${watchlistButton}

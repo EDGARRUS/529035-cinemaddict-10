@@ -16,10 +16,7 @@ export default class CommentsModel {
   }
 
   addComment(comment) {
-    console.log(`Внутри функции эдд коммент`);
-    console.log(comment);
-    this._comments = [].concat(comment, this._comments);
-    console.log(this._comments);
+    this._comments = [].concat(this._comments, comment,);
   }
 
   removeComment(id) {

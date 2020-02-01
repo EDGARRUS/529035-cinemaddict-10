@@ -21,12 +21,12 @@ export class BoardComponent extends AbstractComponent {
 }
 
 export class StatFooterComponent extends AbstractComponent {
-  constructor(stat) {
+  constructor(films) {
     super();
-    this._stat = stat;
+    this._films = films;
   }
 
   getTemplate() {
-    return createStatFooterTemplate(this._stat);
+    return createStatFooterTemplate(this._films);
   }
 }

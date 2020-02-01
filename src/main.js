@@ -27,8 +27,7 @@ render(siteMainElement, navMenuComponent, RenderPosition.BEFOREEND);
 
 // filmsModel.setFilms(filmsData);
 
-const filterController = new FilterController(navMenuComponent.getElement(), filmsModel);
-filterController.render();
+
 
 const dateTo = new Date();
 const dateFrom = null;
@@ -42,7 +41,17 @@ const pageController = new PageController(siteMainElement, filmsModel, api);
 api.getFilms()
   .then((films) => {
     filmsModel.setFilms(films);
+
+    const filterController = new FilterController(navMenuComponent.getElement(), filmsModel);
+    filterController.render();
+
     pageController.render();
+
+    render(document.querySelector(`.footer__statistics`), new StatFooterComponent(filmsModel.getFilms()), RenderPosition.BEFOREEND);
+
+    const siteHeaderElement = document.querySelector(`.header`);
+    const userComponent = new UserComponent(filmsModel.getFilms().filter((film) => film.watchingDate));
+    render(siteHeaderElement, userComponent, `beforeend`);
   });
 
 navMenuComponent.setOnChange((menuItem) => {
@@ -63,16 +72,15 @@ navMenuComponent.setOnChange((menuItem) => {
 
 
 // Отрисовка пользователя
-const siteHeaderElement = document.querySelector(`.header`);
+
 /* const filmsInHistory = filmsData.filter((film) => {
   return film.addToHistory;
 }).length + 1;
 
-const userComponent = new UserComponent(filmsInHistory);
-render(siteHeaderElement, userComponent, `beforeend`);
+
 */
 
-// Отрисовка футера
-/* render(document.querySelector(`.footer__statistics`), new StatFooterComponent(filmsData), RenderPosition.BEFOREEND); */
+
+
 
 

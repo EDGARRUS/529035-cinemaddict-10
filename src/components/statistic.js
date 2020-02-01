@@ -1,6 +1,7 @@
 import AbstractSmartComponent from './abstract-smart-component.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import moment from 'moment';
 
 const Color = {
   YELLOW: `yellow`,
@@ -14,32 +15,48 @@ const getUniqItems = (item, index, array) => {
   return array.indexOf(item) === index;
 };
 
-const getFilmsByDateRange = (films, dateTo, dateFrom) => {
-  return films.filter((film) => {
+const getFilmsByDateRange = (films, dateFrom) => {
+
+  const data = films.filter((film) => {
     const dueDate = film.watchingDate;
-    // Даты надо приводить в один формат
-    return dueDate >= dateFrom && dueDate <= dateTo;
+
+    if(dateFrom) {
+      return moment(dueDate).isBetween(dateFrom, new Date());
+    } else {
+      return true
+    }
   });
+
+  return data;
 };
 
 const calcCountFilmsStyle = (films, style) => {
-  return films.filter((it) => it.style === style).length;
+  return films.filter((it) => it.style.includes(style)).length;
 };
 
 const renderColorsChart = (colorsCtx, films) => {
-  const styles = films
-    .map((film) => film.style)
-    .filter(getUniqItems);
-
+  if(!films) {return}
+  const allStyles = [];
+  films.forEach((film) => film.style.forEach((item) => {
+    if (!allStyles.includes(item)) {
+      allStyles.push(item);
+    }
+  }));
 
   return new Chart(colorsCtx, {
     plugins: [ChartDataLabels],
     type: 'horizontalBar',
     data: {
-      labels: styles,
+      labels: allStyles,
       datasets: [{
-        data: styles.map((style) => calcCountFilmsStyle(films, style)),
+        data: allStyles.map((style) => calcCountFilmsStyle(films, style)),
         backgroundColor: 'orange',
+        datalabels: {
+          anchor: 'start',
+          color: `white`,
+          align: 'end',
+          offset: -20,
+        }
       }]
     },
     options: {
@@ -59,6 +76,7 @@ const renderColorsChart = (colorsCtx, films) => {
         xAxes: [{
           ticks: {
             display:false,
+            suggestedMin: 0,
           }
         }],
         yAxes: [{
@@ -71,30 +89,45 @@ const renderColorsChart = (colorsCtx, films) => {
       },
     }
   });
-
-  /*return new window.Chart(colorsCtx, {
-    type: 'bar',
-    data: data,
-    options: options
-  });*/
 };
 
 
 const createStatTemplate = (films, dateTo, dateFrom) => {
-  const filmsCount = getFilmsByDateRange(films, dateTo, dateFrom).length;
-  const filmsCountIsWatched = films.filter((it) => it.addToHistory).length;
-  const reducer = (accumulator, currentValue) => accumulator + currentValue;
+  let userTitle = ``;
+  if (films.length >= 21) {
+    userTitle = `movie buff`
+  } else if(films.length >= 11) {
+    userTitle = `fan`
+  } else if(films.length >= 1) {
+    userTitle = `novice`
+  }
+
+  const allStyles = [];
+  films.forEach((film) => film.style.forEach((item) => {
+    if (!allStyles.includes(item)) {
+      allStyles.push(item);
+    }
+  }));
+
+  const result = {};
+  const values = allStyles.map((style) => calcCountFilmsStyle(films, style));
+  allStyles.forEach((key, i) => result[key] = values[i]);
+  const maxValue = Math.max.apply(null, values);
+  const topGenre = Object.keys(result).find(key => result[key] === maxValue);
+
+  const filmsCountIsWatched = getFilmsByDateRange(films, dateFrom);
   let timeLength = 0;
-  films.filter((it) => it.addToHistory).map((it) => timeLength += it.duration);
-  console.log(timeLength);
+  filmsCountIsWatched.map((it) => timeLength += it.duration);
   const hours = Math.floor(timeLength / 60);
   const minutes = timeLength % 60;
+
+  // moment.utc(moment.duration(4500, "seconds").asMilliseconds()).format("HH:mm")
 
   return `<section class="statistic">
     <p class="statistic__rank">
       Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-      <span class="statistic__rank-label">Sci-Fighter</span>
+      <span class="statistic__rank-label">${userTitle}</span>
     </p>
 
     <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
@@ -119,15 +152,15 @@ const createStatTemplate = (films, dateTo, dateFrom) => {
     <ul class="statistic__text-list">
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">You watched</h4>
-        <p class="statistic__item-text">${filmsCountIsWatched} <span class="statistic__item-description">movies</span></p>
+        <p class="statistic__item-text">${filmsCountIsWatched.length}<span class="statistic__item-description">movies</span></p>
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Total duration</h4>
-        <p class="statistic__item-text">${hours} <span class="statistic__item-description">h</span> ${minutes} <span class="statistic__item-description">m</span></p>
+        <p class="statistic__item-text">${hours ? hours : `00`} <span class="statistic__item-description">h</span> ${minutes ? minutes : `00`} <span class="statistic__item-description">m</span></p>
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Top genre</h4>
-        <p class="statistic__item-text">Sci-Fi</p>
+        <p class="statistic__item-text">${topGenre ? topGenre : `-`}</p>
       </li>
     </ul>
 
@@ -138,6 +171,15 @@ const createStatTemplate = (films, dateTo, dateFrom) => {
   </section>`
 };
 
+const filterTime = {
+  'all-time': null,
+  'today': moment().startOf('day').format(),
+  'week': moment().subtract(7, 'days').format(),
+  'month': moment().subtract(1, 'months').format(),
+  'year': moment().subtract(1, 'years').format(),
+};
+
+
 export class StatisticComponent extends AbstractSmartComponent {
   constructor(films, dateTo, dateFrom) {
     super();
@@ -147,20 +189,22 @@ export class StatisticComponent extends AbstractSmartComponent {
     this._dateTo = dateTo;
 
     this._filmsChart = null;
+    this._filter = filterTime['all-time'];
 
     this._renderCharts();
   }
 
   getTemplate() {
-    return createStatTemplate(this._films.getFilms(), this._dateTo, this._dateFrom);
+    return createStatTemplate(this._films.getFilms().filter((film) => film.watchingDate), this._dateTo, this._dateFrom);
   }
 
-  rerender(films, dateFrom, dateTo) {
+  rerender(films, dateTo, dateFrom) {
     this._films = films;
     this._dateFrom = dateFrom;
     this._dateTo = dateTo;
 
     super.rerender();
+    this.recoveryListeners();
 
     this._renderCharts();
   }
@@ -169,7 +213,8 @@ export class StatisticComponent extends AbstractSmartComponent {
     const element = this.getElement();
     const filmsCtx = element.querySelector(`.statistic__chart`);
     this._resetCharts();
-    this._filmsChart = renderColorsChart(filmsCtx, this._films.getFilms());
+
+    this._filmsChart = renderColorsChart(filmsCtx, getFilmsByDateRange(this._films.getFilms().filter((film) => film.watchingDate), this._dateFrom));
   }
 
   _resetCharts() {
@@ -179,10 +224,29 @@ export class StatisticComponent extends AbstractSmartComponent {
     }
   }
 
-  recoveryListeners() {}
+  recoveryListeners() {
+    this.setFilterChangeHandler();
+  }
 
   show() {
     super.show();
-    this.rerender(this._films, this._dateFrom, this._dateTo);
+    this.rerender(this._films, this._dateTo, this._dateFrom);
+  }
+
+  setActiveItem(filterItem) {
+    const item = this.getElement().querySelector(`#statistic-${filterItem}`);
+
+    if (item) {
+      item.checked = true;
+    }
+  }
+
+  setFilterChangeHandler() {
+    this.getElement().addEventListener(`change`, (evt) => {
+      const filterName = evt.target.value;
+      this._filter = filterTime[filterName];
+      this.rerender(this._films, new Date(), this._filter);
+      this.setActiveItem(filterName);
+    });
   }
 }

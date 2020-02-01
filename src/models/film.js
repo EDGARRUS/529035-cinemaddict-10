@@ -17,7 +17,7 @@ export default class FilmModel {
 
     this.commentsId = data[`comments`];
 
-    this.userRating = data[`user_details`][`personal_rating`] ? data[`user_details`][`personal_rating`] : null;
+    this.userRating = data[`user_details`][`personal_rating`] ? data[`user_details`][`personal_rating`] : 1;
     this.addToFavorite = Boolean(data[`user_details`][`favorite`]);
     this.addToHistory = Boolean(data[`user_details`][`already_watched`]);
     this.addToWatchlist = Boolean(data[`user_details`][`watchlist`]);

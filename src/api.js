@@ -35,18 +35,14 @@ const API = class {
   }
 
   createComment(comment, filmId) {
-    console.log(`Создается коммент`);
-    console.log(comment.toRAW());
     return this._load({
       url: `comments/${filmId}`,
       method: Method.POST,
       body: JSON.stringify(comment.toRAW()),
       headers: new Headers({'Content-Type': `application/json`})
     })
-      .then((response) => {console.log(`Парсится JSON`);
-        console.log(response); return response.json()})
-      .then((CommentModel) => {console.log(`Парсится модель`);
-        console.log(CommentModel[`comments`]); return CommentModel.parseComment});
+      .then((response) => response.json())
+      .then(CommentModel.parseComment(comment.toRAW()));
   }
 
   updateFilm(id, data) {

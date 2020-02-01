@@ -3,7 +3,6 @@ import {FilterComponent} from "../components/filter";
 import {RenderPosition, replace, render} from "../utils/render";
 
 export const FilterType = {
-  ALL: `all`,
   WATCHLIST: `watchlist`,
   FAVORITES: `favorites`,
   HISTORY: `history`,

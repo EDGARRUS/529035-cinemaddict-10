@@ -35,10 +35,7 @@ export class NavMenuComponent extends AbstractComponent {
         return;
       }
 
-
-
       const menuItem = evt.target.id;
-      console.log(menuItem );
 
       handler(menuItem);
     });
