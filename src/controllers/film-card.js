@@ -93,9 +93,20 @@ export class FilmCardController {
           this._filmCardPopupComponent.getElement().querySelector(`.film-details__comment-input`).setAttribute(`disabled`, `true`);
 
           api.createComment(new CommentModel(newData), film.id)
-              .then(() => {
-                this._commentsModel.addComment(newData);
-          }).then(() => {controller.rerender(this._commentsModel.getCommentsAll())})
+              .then((result) => {
+                this._commentsModel.addComment(result.comments[result.comments.length - 1]);
+                return result.comments[result.comments.length - 1] ;
+          }).then((newComment) => {
+
+            controller.rerender(this._commentsModel.getCommentsAll());
+            const newFilm = FilmModel.clone(film);
+            console.log(film);
+            console.log(newFilm);
+            newFilm.commentsId.push(newComment.id);
+            console.log('Дата ченж');
+            this._onDataChange(this, film, newFilm);
+
+          })
             .catch(() => {
               controller.shake();
             });
@@ -107,7 +118,8 @@ export class FilmCardController {
             .then(() => {
               this._commentsModel.removeComment(oldData);
               /* this._updateComments(this._showingCommentsCount); */
-            }).then(() => {controller.rerender(this._commentsModel.getCommentsAll())});
+            }).then(() => {controller.rerender(this._commentsModel.getCommentsAll())})
+            .catch(() => {controller.rerender(this._commentsModel.getCommentsAll()); controller.shake()});
 
 
         }
@@ -117,6 +129,37 @@ export class FilmCardController {
 
 
       api.getFilmComments(film.id).then((data) => {this._commentsModel.setComments(data); filmCommentController.render(this._commentsModel.getCommentsAll())});
+
+      // Повторный эвент работает криво на кнопках - ничего не меняется
+
+      this._filmCardPopupComponent.setWatchlistButtonClickHandler(() => {
+        const newFilm = FilmModel.clone(film);
+        newFilm.addToWatchlist = !film.addToWatchlist;
+        this._onDataChange(this, film, newFilm);
+      });
+
+      this._filmCardPopupComponent.setFavoriteButtonClickHandler(() => {
+        const newFilm = FilmModel.clone(film);
+        newFilm.addToFavorite = !film.addToFavorite;
+        this._onDataChange(this, film, newFilm);
+      });
+
+      this._filmCardPopupComponent.setHistoryButtonClickHandler(() => {
+        const newFilm = FilmModel.clone(film);
+        newFilm.addToHistory= !film.addToHistory;
+
+        if (!newFilm.addToHistory) {
+          newFilm.userRating = 1;
+        }
+
+        this._onDataChange(this, film, newFilm);
+      });
+
+      this._filmCardPopupComponent.setRateValueButtonClickHandler((rate) => {
+        const newFilm = FilmModel.clone(film);
+        newFilm.userRating = parseInt(rate);
+        this._onDataChange(this, film, newFilm);
+      });
 
       this._filmCardPopupComponent.setCloseButtonClickHandler(filmPopupClose);
       document.addEventListener(`keydown`, onEscKeyDown);

@@ -27,12 +27,13 @@ export class FilterController {
   }
 
   render () {
+    console.log(`Сработал рендеринг фильтра`);
     const container = this._container;
-    const allTasks = this._filmsModel.getFilmsAll();
+    const allFilms = this._filmsModel.getFilmsAll();
     const filters = Object.values(FilterType).map((filterType) => {
       return {
         name: filterType,
-        count: getFilmsByFilter(allTasks, filterType).length,
+        count: getFilmsByFilter(allFilms, filterType).length,
         checked: filterType === this._activeFilterType,
       };
     });

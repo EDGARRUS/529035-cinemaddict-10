@@ -19,8 +19,6 @@ export default class CommentModel {
   }
 
   static parseComment(data) {
-    console.log('Данные которые идут в ПарсКоммент');
-    console.log(data);
     return new CommentModel(data);
   }
 

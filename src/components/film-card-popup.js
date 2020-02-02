@@ -212,6 +212,9 @@ export class FilmCardPopupComponent extends AbstractSmartComponent {
     super();
     this._film = film;
     this._closeButtonHandler = null;
+    this._watchlistButtonClickHandler = null;
+    this._historyButtonClickHandler = null;
+    this._favoriteButtonClickHandler = null;
     this._subscribeOnEvents();
   }
 
@@ -226,7 +229,9 @@ export class FilmCardPopupComponent extends AbstractSmartComponent {
   }
 
   setRateValueButtonClickHandler(handler) {
-    this.getElement().querySelectorAll(`.film-details__user-rating-input`).forEach((input) => input.addEventListener(`change`, handler));
+    this.getElement().querySelectorAll(`.film-details__user-rating-input`).forEach((input) => input.addEventListener(`change`, (evt => {
+      handler(evt.target.value)
+    })));
   }
 
   rerender() {
@@ -239,20 +244,29 @@ export class FilmCardPopupComponent extends AbstractSmartComponent {
   }
 
   _subscribeOnEvents() {
-    const element = this.getElement();
+    this.setWatchlistButtonClickHandler(this._watchlistButtonClickHandler);
+    this.setHistoryButtonClickHandler(this._historyButtonClickHandler);
+    this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
+  }
 
-    element.querySelector(`#watched`)
-      .addEventListener(`click`, (evt) => {
-        evt.preventDefault();
-        this._film.addToWatchlist = !this._film.addToWatchlist;
+  setWatchlistButtonClickHandler(handler) {
+    this.getElement().querySelector(`#watchlist`)
+      .addEventListener(`click`, handler);
+    // this.getElement().querySelector(`.film-details__watched-reset`)
+    //  .addEventListener(`click`, handler);
+    this._watchlistButtonClickHandler = handler;
+  }
 
-        if (!this._film.addToWatchlist) {
-          this._film.userRating = null;
-        }
+  setHistoryButtonClickHandler(handler) {
+    this.getElement().querySelector(`#watched`)
+      .addEventListener(`click`, handler);
+    this._historyButtonClickHandler = handler;
+  }
 
-        this.rerender();
-      });
-
+  setFavoriteButtonClickHandler(handler) {
+    this.getElement().querySelector(`#favorite`)
+      .addEventListener(`click`, handler);
+    this._favoriteButtonClickHandler = handler;
   }
 }
 

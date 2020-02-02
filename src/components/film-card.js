@@ -1,5 +1,6 @@
 import AbstractComponent from "./abstract-component";
 import {formatDate, formatTime} from "../utils/date";
+import AbstractSmartComponent from "./abstract-smart-component";
 
 const mokupTitle = [`Bad boys`, `Good boys`, `Dirty work`, `Revenge`, `Control`, `Invisible`, `Mass Effect`, `Dragon Age`, `Witch`, `Unreal Tournament`, `Easy kill`, `About me`, `Strong Evil`, `Timeout`, `Russia 2019`];
 

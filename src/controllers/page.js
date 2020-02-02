@@ -65,6 +65,7 @@ export class PageController {
 
   _onDataChange(filmCardController, oldData, newData) {
     console.log('Дата изменилась');
+    console.log(newData);
 
 
     this._api.updateFilm(oldData.id, newData)
@@ -110,29 +111,25 @@ export class PageController {
 
     // Рендеринг секций с 2 фильмами
 
-    /*    const filmsDataWithRating = filmsData.filter((film) => {
+        const filmsDataWithRating = filmsData.filter((film) => {
           return film.rating > 0;
         });
         if (filmsDataWithRating) {
           filmsDataWithRating.sort((prev, next) => next.rating - prev.rating);
           render(filmContainerElement, new FilmsSectionComponent(`Top Rated`, `top-rated`), RenderPosition.BEFOREEND);
           const TopRatedListContainerElement = document.querySelector(`#top-rated .films-list__container`);
-          for (let i = 0; i < FILM_TOP_RATED_COUNT; i++) {
-            render(TopRatedListContainerElement, renderFilm(filmsDataWithRating[i]), RenderPosition.BEFOREEND);
-          }
+          renderFilms(TopRatedListContainerElement, filmsDataWithRating.slice(0, 2), this._onDataChange, this._onViewChange);
         }
 
         const filmsDataWithComments = filmsData.filter((film) => {
-          return film.commentsNumber > 0;
+          return film.commentsId.length > 0;
         });
         if (filmsDataWithComments) {
-          filmsDataWithComments.sort((prev, next) => next.commentsNumber - prev.commentsNumber);
+          filmsDataWithComments.sort((prev, next) => next.commentsId.length - prev.commentsId.length);
           render(filmContainerElement, new FilmsSectionComponent(`Most Comment`, `most-comment`), RenderPosition.BEFOREEND);
           const MostCommentListContainerElement = document.querySelector(`#most-comment .films-list__container`);
-          for (let i = 0; i < FILM_MOST_COMMENT_COUNT; i++) {
-            render(MostCommentListContainerElement, renderFilm(filmsDataWithComments[i]), RenderPosition.BEFOREEND);
-          }
-        }*/
+          renderFilms(MostCommentListContainerElement, filmsDataWithComments.slice(0, 2), this._onDataChange, this._onViewChange);
+        }
   }
 
   // Описание функции рендеринга кнопки "Показать еще"
