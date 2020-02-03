@@ -39,12 +39,17 @@ export class PageController {
     this._filmsListComponent = new FilmsListComponent();
     this._sortMenuComponent = new SortMenuComponent();
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
+    this._oldFilmsSectionComponent = null;
+    this._oldMostCommentFilmsSectionComponent = null;
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
+
+    this._renderTopFilmSection = this.renderTopFilmSection.bind(this);
+    this._renderMostCommentFilmSection = this.renderMostCommentFilmSection.bind(this);
 
     this._sortMenuComponent.setSortTypeChangeHandler(this._onSortTypeChange);
     this._filmsModel.setFilterChangeHandler(this._onFilterChange);
@@ -64,18 +69,25 @@ export class PageController {
   // Функция по обновлению данных, передается в ФильмКардКонтроллер
 
   _onDataChange(filmCardController, oldData, newData) {
-    console.log('Дата изменилась');
-    console.log(newData);
+    console.log(oldData.commentsId);
+    console.log(newData.commentsId);
 
 
     this._api.updateFilm(oldData.id, newData)
       .then((filmModel) => {
-        console.log('Промис сработал');
+
 
     const isSuccess = this._filmsModel.updateFilm(oldData.id, filmModel);
 
     if (isSuccess) {
       filmCardController.render(filmModel);
+
+
+
+      if(oldData.commentsId !== newData.commentsId) {this._renderMostCommentFilmSection(document.querySelector(`.films`), this._filmsModel.getFilms());}
+
+      if(oldData.userRating !== newData.userRating)
+      this._renderTopFilmSection(document.querySelector(`.films`), this._filmsModel.getFilms());
     }
       });
 
@@ -110,26 +122,51 @@ export class PageController {
     this._renderShowMoreButton();
 
     // Рендеринг секций с 2 фильмами
+    this._renderTopFilmSection(filmContainerElement, filmsData);
+    this._renderMostCommentFilmSection(filmContainerElement, filmsData);
 
-        const filmsDataWithRating = filmsData.filter((film) => {
-          return film.rating > 0;
-        });
-        if (filmsDataWithRating) {
-          filmsDataWithRating.sort((prev, next) => next.rating - prev.rating);
-          render(filmContainerElement, new FilmsSectionComponent(`Top Rated`, `top-rated`), RenderPosition.BEFOREEND);
-          const TopRatedListContainerElement = document.querySelector(`#top-rated .films-list__container`);
-          renderFilms(TopRatedListContainerElement, filmsDataWithRating.slice(0, 2), this._onDataChange, this._onViewChange);
-        }
 
-        const filmsDataWithComments = filmsData.filter((film) => {
-          return film.commentsId.length > 0;
-        });
-        if (filmsDataWithComments) {
-          filmsDataWithComments.sort((prev, next) => next.commentsId.length - prev.commentsId.length);
-          render(filmContainerElement, new FilmsSectionComponent(`Most Comment`, `most-comment`), RenderPosition.BEFOREEND);
-          const MostCommentListContainerElement = document.querySelector(`#most-comment .films-list__container`);
-          renderFilms(MostCommentListContainerElement, filmsDataWithComments.slice(0, 2), this._onDataChange, this._onViewChange);
-        }
+  }
+
+  renderTopFilmSection(filmContainerElement, films) {
+    console.log(`Рендер секции топ`);
+    console.log(this._oldTopFilmsSectionComponent);
+
+    if(this._oldTopFilmsSectionComponent) {remove(this._oldTopFilmsSectionComponent)}
+
+    const filmsSectionComponent = new FilmsSectionComponent(`Top Rated`, `top-rated`);
+
+    const filmsDataWithRating = films.filter((film) => {
+      return film.rating > 0;
+    });
+    if (filmsDataWithRating) {
+      filmsDataWithRating.sort((prev, next) => next.rating - prev.rating);
+      render(filmContainerElement, filmsSectionComponent, RenderPosition.BEFOREEND);
+      const TopRatedListContainerElement = document.querySelector(`#top-rated .films-list__container`);
+      renderFilms(TopRatedListContainerElement, filmsDataWithRating.slice(0, 2), this._onDataChange, this._onViewChange);
+    }
+
+    this._oldTopFilmsSectionComponent = filmsSectionComponent;
+
+  }
+
+  renderMostCommentFilmSection(filmContainerElement, films) {
+    console.log(`Рендер секции мост коммент`);
+    if(this._oldMostCommentFilmsSectionComponent) {remove(this._oldMostCommentFilmsSectionComponent)}
+
+    const filmsSectionComponent = new FilmsSectionComponent(`Most Comment`, `most-comment`);
+
+    const filmsDataWithComments = films.filter((film) => {
+      return film.commentsId.length > 0;
+    });
+    if (filmsDataWithComments) {
+      filmsDataWithComments.sort((prev, next) => next.commentsId.length - prev.commentsId.length);
+      render(filmContainerElement, filmsSectionComponent, RenderPosition.BEFOREEND);
+      const MostCommentListContainerElement = document.querySelector(`#most-comment .films-list__container`);
+      renderFilms(MostCommentListContainerElement, filmsDataWithComments.slice(0, 2), this._onDataChange, this._onViewChange);
+    }
+
+    this._oldMostCommentFilmsSectionComponent = filmsSectionComponent;
   }
 
   // Описание функции рендеринга кнопки "Показать еще"

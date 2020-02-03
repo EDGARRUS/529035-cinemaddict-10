@@ -12,6 +12,7 @@ export class FilmComment {
     this._deleteCommentHandler = this._deleteCommentHandler.bind(this);
     this._submitCommentHandler = this._submitCommentHandler.bind(this);
     this._smileCommentHandler = this._smileCommentHandler.bind(this);
+    this.shake = this.shake.bind(this);
 
     this._filmCardPopupCommentComponent = new FilmCardPopupCommentComponent();
   }
@@ -38,15 +39,23 @@ export class FilmComment {
   _submitCommentHandler(e) {
     if (e.keyCode === 13 && (e.metaKey || e.ctrlKey)) {
 
-      const smileActive = this._filmCardPopupCommentComponent.getElement().querySelector(`.film-details__add-emoji-label img`).id;
+      let smileActive = ``;
 
-      const newComment = {
-        comment: he.encode(e.target.value),
-        date: new Date().toISOString(),
-        emotion: smileActive ? smileActive : ``,
-      };
+      if(this._filmCardPopupCommentComponent.getElement().querySelector(`.film-details__add-emoji-label img`)) {
+        smileActive = this._filmCardPopupCommentComponent.getElement().querySelector(`.film-details__add-emoji-label img`).id;
 
-      this._onDataChange(this, null, newComment);
+        const newComment = {
+          comment: he.encode(e.target.value),
+          date: new Date().toISOString(),
+          emotion: smileActive,
+        };
+
+        this._onDataChange(this, null, newComment);
+
+      } else {
+        this.shake();
+      }
+
     }
   }
 

@@ -2,6 +2,7 @@ import AbstractComponent from "./abstract-component";
 import AbstractSmartComponent from "./abstract-smart-component";
 import {formatDate, formatTime} from "../utils/date";
 import moment from "moment";
+import {replace} from "../utils/render";
 
 const createPopupFilmCardCommentTemplate = (comments) => {
 
@@ -86,7 +87,7 @@ const createRateFormMarkup = (film) => {
     return markup;
   };
 
-  return `<div class="form-details__middle-container">
+  return `
       <section class="film-details__user-rating-wrap">
         <div class="film-details__user-rating-controls">
           <button class="film-details__watched-reset" type="button">Undo</button>
@@ -109,7 +110,7 @@ const createRateFormMarkup = (film) => {
           </section>
         </div>
       </section>
-    </div>`;
+    `;
 
 };
 
@@ -192,9 +193,12 @@ const createPopupFilmCardTemplate = (film) => {
             ${favoriteButton}
       </section>
     </div>
+    <div class="form-details__middle-container">
+    
 
 
     ${film.addToHistory ? createRateFormMarkup(film) : ``}
+    </div>
     
     <div class="form-details__bottom-container">
     </div>
@@ -215,6 +219,7 @@ export class FilmCardPopupComponent extends AbstractSmartComponent {
     this._watchlistButtonClickHandler = null;
     this._historyButtonClickHandler = null;
     this._favoriteButtonClickHandler = null;
+    this._rateValueButtonClickHandler = null;
     this._subscribeOnEvents();
   }
 
@@ -230,12 +235,32 @@ export class FilmCardPopupComponent extends AbstractSmartComponent {
 
   setRateValueButtonClickHandler(handler) {
     this.getElement().querySelectorAll(`.film-details__user-rating-input`).forEach((input) => input.addEventListener(`change`, (evt => {
-      handler(evt.target.value)
+      console.log(handler);
+      handler(evt.target.value);
+      this._rateValueButtonClickHandler = handler;
     })));
   }
 
-  rerender() {
-    super.rerender();
+  renderUserRatingForm(film) {
+    console.log(`Сработал рендер формы оценки`);
+    console.log(film.addToHistory);
+    const container = this.getElement().querySelector('.form-details__middle-container');
+    container.innerHTML = `${film.addToHistory ? createRateFormMarkup(film) : ``}`;
+  }
+
+  rerenderUserRating(film) {
+    const oldUserRating = this.getElement().querySelector('.film-details__rating');
+    const newUserRating = `<div class="film-details__rating">
+              <p class="film-details__total-rating">${film.rating}</p>
+              ${film.userRating ? `<p class="film-details__user-rating">Your rate ${film.userRating}</p>` : ``}
+            </div>`;
+
+    oldUserRating.innerHTML = newUserRating;
+  }
+
+  rerender(film) {
+    this._film = film;
+    super.rerender()
   }
 
   recoveryListeners() {
@@ -247,6 +272,7 @@ export class FilmCardPopupComponent extends AbstractSmartComponent {
     this.setWatchlistButtonClickHandler(this._watchlistButtonClickHandler);
     this.setHistoryButtonClickHandler(this._historyButtonClickHandler);
     this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
+    this.setRateValueButtonClickHandler(this._rateValueButtonClickHandler);
   }
 
   setWatchlistButtonClickHandler(handler) {

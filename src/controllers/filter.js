@@ -27,7 +27,7 @@ export class FilterController {
   }
 
   render () {
-    console.log(`Сработал рендеринг фильтра`);
+
     const container = this._container;
     const allFilms = this._filmsModel.getFilmsAll();
     const filters = Object.values(FilterType).map((filterType) => {
