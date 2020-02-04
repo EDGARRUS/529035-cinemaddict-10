@@ -186,6 +186,7 @@ export class FilmCardController {
 
       if (!newFilm.addToHistory) {
         this._filmCardPopupComponent.renderUserRatingForm(newFilm);
+        this._filmCardPopupComponent.rerenderUserRating(newFilm);
       } else {
         this._filmCardPopupComponent.renderUserRatingForm(newFilm);
         this._filmCardPopupComponent.setRateValueButtonClickHandler((rate) => {

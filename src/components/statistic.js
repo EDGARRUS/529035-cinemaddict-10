@@ -24,7 +24,7 @@ const calcCountFilmsStyle = (films, style) => {
 
 const renderColorsChart = (colorsCtx, films) => {
   if (!films) {
-    return;
+    return ``;
   }
   const allStyles = [];
   films.forEach((film) => film.style.forEach((item) => {
