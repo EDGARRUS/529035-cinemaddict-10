@@ -1,21 +1,30 @@
 import AbstractComponent from "./abstract-component";
 
-const createUserTemplate = (filmsInHistory) => {
+const createUserTemplate = (films) => {
+  let userTitle = ``;
+  if (films.length >= 21) {
+    userTitle = `movie buff`;
+  } else if (films.length >= 11) {
+    userTitle = `fan`;
+  } else if (films.length >= 1) {
+    userTitle = `novice`;
+  }
+
   return (
     `<section class="header__profile profile">
-    <p class="profile__rating">${filmsInHistory}</p>
+    <p class="profile__rating">${userTitle}</p>
     <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
   </section>`
   );
 };
 
 export class UserComponent extends AbstractComponent {
-  constructor(filmsInHistory) {
+  constructor(filmsWithWatchDate) {
     super();
-    this._filmsInHistory = filmsInHistory;
+    this._filmsWithWatchDate = filmsWithWatchDate;
   }
 
   getTemplate() {
-    return createUserTemplate(this._filmsInHistory);
+    return createUserTemplate(this._filmsWithWatchDate);
   }
 }

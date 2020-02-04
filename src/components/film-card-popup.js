@@ -1,10 +1,14 @@
 import AbstractComponent from "./abstract-component";
 import AbstractSmartComponent from "./abstract-smart-component";
+import {formatDate, formatTime} from "../utils/date";
+import moment from "moment";
+
 
 const createPopupFilmCardCommentTemplate = (comments) => {
 
-  const commentsMarkup = comments.map((comment, i) => (
-    `<li class="film-details__comment">
+  const commentsMarkup = comments.map((comment) => {
+
+    return `<li class="film-details__comment">
     <span class="film-details__comment-emoji">
     <img src="images/emoji/${comment.emotion}.png" width="55" height="55" alt="emoji">
     </span>
@@ -12,14 +16,18 @@ const createPopupFilmCardCommentTemplate = (comments) => {
     <p class="film-details__comment-text">${comment.comment}</p>
   <p class="film-details__comment-info">
     <span class="film-details__comment-author">${comment.author}</span>
-  <span class="film-details__comment-day">${comment.date}</span>
-  <button data-order="${i}" type="button" class="film-details__comment-delete">Delete</button>
+  <span class="film-details__comment-day">${moment(comment.date).format(`YYYY/MM/DD HH:MM`)}</span>
+  <button data-id="${comment.id}" type="button" class="film-details__comment-delete">Delete</button>
     </p>
     </div>
-    </li>`
-  )).join(``);
+    </li>`;
+  }).join(``);
 
-  const commentsContainerMarkup = `<ul class="film-details__comments-list">${commentsMarkup}</ul>`;
+  const commentsContainerMarkup = `
+      <section class="film-details__comments-wrap">
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
+      </section>
+    <ul class="film-details__comments-list">${commentsMarkup}</ul>`;
 
   const newCommentMarkup = `
     <div class="film-details__new-comment">
@@ -40,8 +48,8 @@ const createPopupFilmCardCommentTemplate = (comments) => {
               <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
             </label>
 
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-gpuke" value="grinning">
-            <label class="film-details__emoji-label" for="emoji-gpuke">
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="grinning">
+            <label class="film-details__emoji-label" for="emoji-puke">
               <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
             </label>
 
@@ -79,7 +87,7 @@ const createRateFormMarkup = (film) => {
     return markup;
   };
 
-  return `<div class="form-details__middle-container">
+  return `
       <section class="film-details__user-rating-wrap">
         <div class="film-details__user-rating-controls">
           <button class="film-details__watched-reset" type="button">Undo</button>
@@ -102,7 +110,7 @@ const createRateFormMarkup = (film) => {
           </section>
         </div>
       </section>
-    </div>`;
+    `;
 
 };
 
@@ -155,18 +163,18 @@ const createPopupFilmCardTemplate = (film) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${film.releaseDate}</td>
+              <td class="film-details__cell">${formatDate(film.releaseDate)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">${film.duration}</td>
+              <td class="film-details__cell">${formatTime(film.duration)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>
               <td class="film-details__cell">${film.country}</td>
             </tr>
             <tr class="film-details__row">
-              <td class="film-details__term">Genres</td>
+              <td class="film-details__term">${film.style.length > 1 ? `Genres` : `Genre`}</td>
               <td class="film-details__cell">
                 <span class="film-details__genre">${film.style}</span>
               </td>
@@ -185,15 +193,17 @@ const createPopupFilmCardTemplate = (film) => {
             ${favoriteButton}
       </section>
     </div>
+    <div class="form-details__middle-container">
+    
 
 
     ${film.addToHistory ? createRateFormMarkup(film) : ``}
-
-    <div class="form-details__bottom-container">
-      <section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.commentsId.length}</span></h3>
-      </section>
     </div>
+    
+    <div class="form-details__bottom-container">
+    </div>
+
+ 
   </form>
 </section>`
   );
@@ -206,6 +216,10 @@ export class FilmCardPopupComponent extends AbstractSmartComponent {
     super();
     this._film = film;
     this._closeButtonHandler = null;
+    this._watchlistButtonClickHandler = null;
+    this._historyButtonClickHandler = null;
+    this._favoriteButtonClickHandler = null;
+    this._rateValueButtonClickHandler = null;
     this._subscribeOnEvents();
   }
 
@@ -220,10 +234,34 @@ export class FilmCardPopupComponent extends AbstractSmartComponent {
   }
 
   setRateValueButtonClickHandler(handler) {
-    this.getElement().querySelectorAll(`.film-details__user-rating-input`).forEach((input) => input.addEventListener(`change`, handler));
+    this.getElement().querySelectorAll(`.film-details__user-rating-input`).forEach((input) => input.addEventListener(`change`, (evt) => {
+      handler(evt.target.value);
+      this._rateValueButtonClickHandler = handler;
+    }));
   }
 
-  rerender() {
+
+  renderUserRatingForm(filmData) {
+    const container = this.getElement().querySelector(`.form-details__middle-container`);
+    container.innerHTML = `${filmData.addToHistory ? createRateFormMarkup(filmData) : ``}`;
+    if (filmData.addToHistory) {
+      this.setClearRatingButtonClickHandler(this._clearRatingButtonClickHandler);
+      this.setRateValueButtonClickHandler(this._rateValueButtonClickHandler);
+    }
+  }
+
+  rerenderUserRating(filmData) {
+    const oldUserRating = this.getElement().querySelector(`.film-details__rating`);
+    const newUserRating = `<div class="film-details__rating">
+              <p class="film-details__total-rating">${filmData.rating}</p>
+              ${filmData.userRating ? `<p class="film-details__user-rating">Your rate ${filmData.userRating}</p>` : ``}
+            </div>`;
+
+    oldUserRating.innerHTML = newUserRating;
+  }
+
+  rerender(film) {
+    this._film = film;
     super.rerender();
   }
 
@@ -233,20 +271,33 @@ export class FilmCardPopupComponent extends AbstractSmartComponent {
   }
 
   _subscribeOnEvents() {
-    const element = this.getElement();
+    this.setWatchlistButtonClickHandler(this._watchlistButtonClickHandler);
+    this.setHistoryButtonClickHandler(this._historyButtonClickHandler);
+    this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
+  }
 
-    element.querySelector(`#watched`)
-      .addEventListener(`click`, (evt) => {
-        evt.preventDefault();
-        this._film.addToWatchlist = !this._film.addToWatchlist;
+  setWatchlistButtonClickHandler(handler) {
+    this.getElement().querySelector(`#watchlist`)
+      .addEventListener(`click`, handler);
+    this._watchlistButtonClickHandler = handler;
+  }
 
-        if (!this._film.addToWatchlist) {
-          this._film.userRating = null;
-        }
+  setHistoryButtonClickHandler(handler) {
+    this.getElement().querySelector(`#watched`)
+      .addEventListener(`click`, handler);
+    this._historyButtonClickHandler = handler;
+  }
 
-        this.rerender();
-      });
+  setFavoriteButtonClickHandler(handler) {
+    this.getElement().querySelector(`#favorite`)
+      .addEventListener(`click`, handler);
+    this._favoriteButtonClickHandler = handler;
+  }
 
+  setClearRatingButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__watched-reset`)
+      .addEventListener(`click`, handler);
+    this._clearRatingButtonClickHandler = handler;
   }
 }
 
@@ -268,5 +319,9 @@ export class FilmCardPopupCommentComponent extends AbstractComponent {
     this.getElement().querySelectorAll(`.film-details__comment-delete`).forEach((button) => {
       button.addEventListener(`click`, handler);
     });
+  }
+
+  setSmileCommentHandler(handler) {
+    this.getElement().querySelector(`.film-details__new-comment`).addEventListener(`change`, handler);
   }
 }

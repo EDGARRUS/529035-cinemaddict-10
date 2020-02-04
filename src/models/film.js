@@ -1,11 +1,10 @@
 export default class FilmModel {
   constructor(data) {
-    console.log(data);
     this.id = data[`id`];
     this.title = data[`film_info`][`title`];
     this.altTitle = data[`film_info`][`alternative_title`];
     this.description = data[`film_info`][`description`] || ``;
-    this.director =  data[`film_info`][`director`];
+    this.director = data[`film_info`][`director`];
     this.style = data[`film_info`][`genre`];
     this.poster = data[`film_info`][`poster`];
     this.releaseDate = data[`film_info`][`release`][`date`] ? new Date(data[`film_info`][`release`][`date`]) : null;
@@ -18,7 +17,7 @@ export default class FilmModel {
 
     this.commentsId = data[`comments`];
 
-    this.userRating = data[`user_details`][`personal_rating`] ? data[`user_details`][`personal_rating`] : null;
+    this.userRating = data[`user_details`][`personal_rating`] ? parseInt(data[`user_details`][`personal_rating`], 10) : 1;
     this.addToFavorite = Boolean(data[`user_details`][`favorite`]);
     this.addToHistory = Boolean(data[`user_details`][`already_watched`]);
     this.addToWatchlist = Boolean(data[`user_details`][`watchlist`]);
@@ -37,32 +36,23 @@ export default class FilmModel {
         'genre': this.style,
         'poster': this.poster,
         'release': {
-          'date': this.releaseDate ? this.releaseDate.toISOString() : null,
+          'date': this.releaseDate ? this.releaseDate.toISOString() : 1,
           'release_country': this.country,
         },
         'runtime': this.duration,
         'total_rating': this.rating,
         'writers': this.writers,
         'actors': this.actors,
-        'age': this.age,
+        'age_rating': this.age,
       },
-      'comments': this.commentsId,
+      'comments': this.commentsId.map((item) => item),
       'user_details': {
-        'personal_rating': this.userRating ? this.userRating : null,
+        'personal_rating': this.userRating ? parseInt(this.userRating, 10) : 1,
         'favorite': this.addToFavorite,
         'already_watched': this.addToHistory,
         'watchlist': this.addToWatchlist,
-        'watching_date': this.watchingDate
-      }
-
-/*
-      'description': this.description,
-      'due_date': this.dueDate ? this.dueDate.toISOString() : null,
-      'tags': Array.from(this.tags),
-      'repeating_days': this.repeatingDays,
-      'color': this.color,
-      'is_favorite': this.isFavorite,
-      'is_archived': this.isArchive, */
+        'watching_date': this.watchingDate,
+      },
     };
   }
 
@@ -75,7 +65,6 @@ export default class FilmModel {
   }
 
   static clone(data) {
-    console.log(data);
     return new FilmModel(data.toRAW());
   }
 }
