@@ -69,7 +69,6 @@ export class FilmComment {
     smilePlace.innerHTML = ``;
     const smileActive = e.target.id.substr(6);
     const smileMarkup = `<img id="${smileActive}" src="images/emoji/${smileActive}.png" width="55" height="55" alt="emoji">`;
-    console.log(smileMarkup);
     smilePlace.insertAdjacentHTML(`beforeend`, smileMarkup);
   }
 

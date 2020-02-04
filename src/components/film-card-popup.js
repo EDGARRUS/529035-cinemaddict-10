@@ -181,10 +181,6 @@ export class FilmCardPopupComponent extends AbstractSmartComponent {
   renderUserRatingForm(filmData) {
     const container = this.getElement().querySelector(`.form-details__middle-container`);
     container.innerHTML = `${filmData.addToHistory ? createRateFormMarkup(filmData) : ``}`;
-    if (filmData.addToHistory) {
-      this.setClearRatingButtonClickHandler(this._clearRatingButtonClickHandler);
-      this.setRateValueButtonClickHandler(this._rateValueButtonClickHandler);
-    }
   }
 
   rerenderUserRating(filmData) {

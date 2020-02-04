@@ -8,11 +8,8 @@ const createFilmBoardTemplate = () => {
   );
 };
 
-
-
 export class BoardComponent extends AbstractComponent {
   getTemplate() {
     return createFilmBoardTemplate();
   }
 }
-

@@ -10,7 +10,7 @@ import {StatisticComponent} from "./components/statistic";
 import {MenuItem} from "./components/nav-menu";
 import {LoadingScreenComponent} from "./components/loading-screen";
 
-const AUTHORIZATION = `Basic eo0w590ik29889a`;
+const AUTHORIZATION = `Basic eo0w590ik29899a`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 const api = new API(END_POINT, AUTHORIZATION);
 const filmsModel = new FilmsModel();

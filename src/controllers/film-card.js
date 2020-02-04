@@ -104,7 +104,7 @@ export class FilmCardController {
 
     render(document.querySelector(`body`), this._filmCardPopupComponent, RenderPosition.BEFOREEND);
 
-    const AUTHORIZATION = `Basic eo0w590ik29889a`;
+    const AUTHORIZATION = `Basic eo0w590ik29899a`;
     const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
     const api = new API(END_POINT, AUTHORIZATION);
 
@@ -142,10 +142,7 @@ export class FilmCardController {
             controller.rerender(this._commentsModel.getCommentsAll());
             controller.shake();
           });
-
-
       }
-
 
     });
 
@@ -171,17 +168,13 @@ export class FilmCardController {
       newFilmData = newFilm;
     });
 
-    // Кнопка добавить в историю и всё связанное с ней
 
     let newFilmData = null;
 
     this._filmCardPopupComponent.setHistoryButtonClickHandler(() => {
-      // Первоначальный вызов обработчика
       film = newFilmData ? newFilmData : film;
       let newFilm = FilmModel.clone(film);
       newFilm.addToHistory = !film.addToHistory;
-      // Нельзя передать null, хотя сервер посылает мне null спокойно
-      // newFilm.watchingDate = newFilm.addToHistory ? moment().format() : null;
       newFilm.watchingDate = moment().format();
 
       if (!newFilm.addToHistory) {
@@ -190,11 +183,6 @@ export class FilmCardController {
 
       this._onDataChange(this, film, newFilm);
       newFilmData = FilmModel.clone(newFilm);
-
-      console.log(`Первый этап`);
-      console.log(film);
-      console.log(newFilm);
-      console.log(newFilmData);
 
       if (!newFilm.addToHistory) {
         this._filmCardPopupComponent.renderUserRatingForm(newFilm);
@@ -223,23 +211,25 @@ export class FilmCardController {
 
     if (film.addToHistory) {
       this._filmCardPopupComponent.setRateValueButtonClickHandler((rate) => {
+        film = newFilmData ? newFilmData : film;
         let newFilm = FilmModel.clone(film);
         newFilm.userRating = parseInt(rate, 10);
         this._onDataChange(this, film, newFilm);
         this._filmCardPopupComponent.rerenderUserRating(newFilm);
+        newFilmData = FilmModel.clone(newFilm);
       });
 
       this._filmCardPopupComponent.setClearRatingButtonClickHandler(() => {
+        film = newFilmData ? newFilmData : film;
         let newFilm = FilmModel.clone(film);
         newFilm.addToHistory = false;
         newFilm.userRating = 1;
         this._onDataChange(this, film, newFilm);
         this._filmCardPopupComponent.renderUserRatingForm(newFilm);
         this._filmCardPopupComponent.rerenderUserRating(newFilm);
+        newFilmData = FilmModel.clone(newFilm);
       });
     }
-
-    // Конец кнопки Добавить в историю
 
 
     this._filmCardPopupComponent.setCloseButtonClickHandler(this.filmPopupClose);

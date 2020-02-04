@@ -127,7 +127,7 @@ export class PageController {
       filmsDataWithRating.sort((prev, next) => next.rating - prev.rating);
       render(filmContainerElement, filmsSectionComponent, RenderPosition.BEFOREEND);
       const TopRatedListContainerElement = document.querySelector(`#top-rated .films-list__container`);
-      renderFilms(TopRatedListContainerElement, filmsDataWithRating.slice(0,FILM_COUNT_TOP_RATE), this._onDataChange, this._onViewChange);
+      renderFilms(TopRatedListContainerElement, filmsDataWithRating.slice(0, FILM_COUNT_TOP_RATE), this._onDataChange, this._onViewChange);
     }
 
     this._oldTopFilmsSectionComponent = filmsSectionComponent;
