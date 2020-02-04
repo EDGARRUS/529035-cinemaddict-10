@@ -1,12 +1,13 @@
 import AbstractComponent from "./abstract-component";
+import {UserRatingTitle} from "../utils/util";
 
 const createUserTemplate = (films) => {
   let userTitle = ``;
-  if (films.length >= 21) {
+  if (films.length >= UserRatingTitle.MOVIEBUFF) {
     userTitle = `movie buff`;
-  } else if (films.length >= 11) {
+  } else if (films.length >= UserRatingTitle.FAN) {
     userTitle = `fan`;
-  } else if (films.length >= 1) {
+  } else if (films.length >= UserRatingTitle.NOVICE) {
     userTitle = `novice`;
   }
 

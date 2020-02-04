@@ -2,6 +2,7 @@ import AbstractSmartComponent from './abstract-smart-component.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from 'moment';
+import {UserRatingTitle} from "../utils/util";
 
 const getFilmsByDateRange = (films, dateFrom) => {
 
@@ -84,11 +85,11 @@ const renderColorsChart = (colorsCtx, films) => {
 
 const createStatTemplate = (films, dateTo, dateFrom) => {
   let userTitle = ``;
-  if (films.length >= 21) {
+  if (films.length >= UserRatingTitle.MOVIEBUFF) {
     userTitle = `movie buff`;
-  } else if (films.length >= 11) {
+  } else if (films.length >= UserRatingTitle.FAN) {
     userTitle = `fan`;
-  } else if (films.length >= 1) {
+  } else if (films.length >= UserRatingTitle.NOVICE) {
     userTitle = `novice`;
   }
 

@@ -13,7 +13,7 @@ export class FilterController {
     this._container = container;
     this._filmsModel = filmsModel;
 
-    this._activeFilterType = FilterType.ALL;
+    this._activeFilterType = null;
     this._filterComponent = null;
 
     this._onFilterChange = this._onFilterChange.bind(this);

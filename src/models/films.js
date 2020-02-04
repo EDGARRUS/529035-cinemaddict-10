@@ -1,10 +1,9 @@
-import {FilterType} from "../controllers/filter";
 import {getFilmsByFilter} from "../utils/filter";
 
 export default class FilmsModel {
   constructor() {
     this._films = [];
-    this._activeFilterType = FilterType.ALL;
+    this._activeFilterType = null;
 
     this._filterChangeHandlers = [];
     this._dataChangeHandlers = [];

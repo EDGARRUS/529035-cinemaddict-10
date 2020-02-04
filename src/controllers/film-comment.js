@@ -1,5 +1,5 @@
 import {render, RenderPosition, replace} from "../utils/render";
-import {FilmCardPopupCommentComponent} from "../components/film-card-popup";
+import {FilmCardPopupCommentComponent} from "../components/film-comments";
 import he from "he";
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
@@ -39,10 +39,8 @@ export class FilmComment {
   _submitCommentHandler(e) {
     if (e.keyCode === 13 && (e.metaKey || e.ctrlKey)) {
 
-      let smileActive = ``;
-
       if (this._filmCardPopupCommentComponent.getElement().querySelector(`.film-details__add-emoji-label img`)) {
-        smileActive = this._filmCardPopupCommentComponent.getElement().querySelector(`.film-details__add-emoji-label img`).id;
+        const smileActive = this._filmCardPopupCommentComponent.getElement().querySelector(`.film-details__add-emoji-label img`).id;
 
         const newComment = {
           comment: he.encode(e.target.value),
@@ -71,6 +69,7 @@ export class FilmComment {
     smilePlace.innerHTML = ``;
     const smileActive = e.target.id.substr(6);
     const smileMarkup = `<img id="${smileActive}" src="images/emoji/${smileActive}.png" width="55" height="55" alt="emoji">`;
+    console.log(smileMarkup);
     smilePlace.insertAdjacentHTML(`beforeend`, smileMarkup);
   }
 

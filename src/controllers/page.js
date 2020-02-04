@@ -1,5 +1,6 @@
 import {remove, render, RenderPosition} from "../utils/render";
-import {FilmsListComponent, FilmsSectionComponent} from "../components/films-list";
+import {FilmsListComponent} from "../components/films-list";
+import {FilmsSectionComponent} from "../components/films-section";
 import {NoFilmsComponent} from "../components/no-films";
 import {ShowMoreButtonComponent} from "../components/show-more-button";
 import {SortMenuComponent, SortType} from "../components/sort-menu";
@@ -9,6 +10,8 @@ import {BoardComponent} from "../components/board";
 
 const FILM_COUNT_ON_START = 5;
 const FILM_COUNT_BY_BUTTON = 5;
+const FILM_COUNT_TOP_RATE = 2;
+const FILM_COUNT_MOST_COMMENT = 2;
 
 
 const renderFilms = (filmListElement, filmsData, onDataChange, onViewChange) => {
@@ -124,7 +127,7 @@ export class PageController {
       filmsDataWithRating.sort((prev, next) => next.rating - prev.rating);
       render(filmContainerElement, filmsSectionComponent, RenderPosition.BEFOREEND);
       const TopRatedListContainerElement = document.querySelector(`#top-rated .films-list__container`);
-      renderFilms(TopRatedListContainerElement, filmsDataWithRating.slice(0, 2), this._onDataChange, this._onViewChange);
+      renderFilms(TopRatedListContainerElement, filmsDataWithRating.slice(0,FILM_COUNT_TOP_RATE), this._onDataChange, this._onViewChange);
     }
 
     this._oldTopFilmsSectionComponent = filmsSectionComponent;
@@ -145,7 +148,7 @@ export class PageController {
       filmsDataWithComments.sort((prev, next) => next.commentsId.length - prev.commentsId.length);
       render(filmContainerElement, filmsSectionComponent, RenderPosition.BEFOREEND);
       const MostCommentListContainerElement = document.querySelector(`#most-comment .films-list__container`);
-      renderFilms(MostCommentListContainerElement, filmsDataWithComments.slice(0, 2), this._onDataChange, this._onViewChange);
+      renderFilms(MostCommentListContainerElement, filmsDataWithComments.slice(0, FILM_COUNT_MOST_COMMENT), this._onDataChange, this._onViewChange);
     }
 
     this._oldMostCommentFilmsSectionComponent = filmsSectionComponent;

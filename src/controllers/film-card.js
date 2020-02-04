@@ -1,11 +1,13 @@
 import {FilmCardComponent} from "../components/film-card";
-import {FilmCardPopupCommentComponent, FilmCardPopupComponent} from "../components/film-card-popup";
+import {FilmCardPopupComponent} from "../components/film-card-popup";
+import {FilmCardPopupCommentComponent} from "../components/film-comments";
 import {remove, replace, render, RenderPosition} from "../utils/render";
 import {FilmComment} from "./film-comment";
 import API from "../api";
 import FilmModel from "../models/film";
 import CommentModel from "../models/comment";
 import CommentsModel from "../models/comments";
+import moment from "moment";
 
 const Mode = {
   DEFAULT: `default`,
@@ -169,20 +171,30 @@ export class FilmCardController {
       newFilmData = newFilm;
     });
 
+    // Кнопка добавить в историю и всё связанное с ней
+
     let newFilmData = null;
 
     this._filmCardPopupComponent.setHistoryButtonClickHandler(() => {
+      // Первоначальный вызов обработчика
       film = newFilmData ? newFilmData : film;
       let newFilm = FilmModel.clone(film);
       newFilm.addToHistory = !film.addToHistory;
+      // Нельзя передать null, хотя сервер посылает мне null спокойно
+      // newFilm.watchingDate = newFilm.addToHistory ? moment().format() : null;
+      newFilm.watchingDate = moment().format();
 
       if (!newFilm.addToHistory) {
         newFilm.userRating = 1;
       }
 
       this._onDataChange(this, film, newFilm);
-      newFilmData = newFilm;
+      newFilmData = FilmModel.clone(newFilm);
 
+      console.log(`Первый этап`);
+      console.log(film);
+      console.log(newFilm);
+      console.log(newFilmData);
 
       if (!newFilm.addToHistory) {
         this._filmCardPopupComponent.renderUserRatingForm(newFilm);
@@ -226,6 +238,8 @@ export class FilmCardController {
         this._filmCardPopupComponent.rerenderUserRating(newFilm);
       });
     }
+
+    // Конец кнопки Добавить в историю
 
 
     this._filmCardPopupComponent.setCloseButtonClickHandler(this.filmPopupClose);

@@ -3,6 +3,12 @@ export const RenderPosition = {
   BEFOREEND: `beforeend`,
 };
 
+export const UserRatingTitle = {
+  MOVIEBUFF: 21,
+  FAN: 11,
+  NOVICE: 1
+};
+
 export const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;

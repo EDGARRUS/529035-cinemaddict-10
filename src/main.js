@@ -1,6 +1,6 @@
 import API from './api.js';
 import {RenderPosition, render} from './utils/render.js';
-import {StatFooterComponent} from './components/board.js';
+import {StatFooterComponent} from './components/stat-footer.js';
 import {NavMenuComponent} from './components/nav-menu.js';
 import {UserComponent} from './components/user';
 import {PageController} from "./controllers/page";
@@ -8,7 +8,7 @@ import FilmsModel from './models/films.js';
 import {FilterController} from "./controllers/filter";
 import {StatisticComponent} from "./components/statistic";
 import {MenuItem} from "./components/nav-menu";
-import {LoadingScreenComponent} from "./components/no-films";
+import {LoadingScreenComponent} from "./components/loading-screen";
 
 const AUTHORIZATION = `Basic eo0w590ik29889a`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
