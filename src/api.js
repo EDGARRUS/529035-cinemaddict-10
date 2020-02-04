@@ -5,7 +5,7 @@ const Method = {
   GET: `GET`,
   POST: `POST`,
   PUT: `PUT`,
-  DELETE: `DELETE`
+  DELETE: `DELETE`,
 };
 
 const checkStatus = (response) => {
@@ -31,7 +31,7 @@ const API = class {
   getFilmComments(id) {
     return this._load({url: `comments/${id}`})
       .then((response) => response.json())
-      .then(FilmModel.parseComments)
+      .then(FilmModel.parseComments);
   }
 
   createComment(comment, filmId) {
@@ -39,7 +39,7 @@ const API = class {
       url: `comments/${filmId}`,
       method: Method.POST,
       body: JSON.stringify(comment.toRAW()),
-      headers: new Headers({'Content-Type': `application/json`})
+      headers: new Headers({'Content-Type': `application/json`}),
     })
       .then((response) => response.json())
       .then(CommentModel.parseComment(comment.toRAW()));
@@ -50,7 +50,7 @@ const API = class {
       url: `movies/${id}`,
       method: Method.PUT,
       body: JSON.stringify(data.toRAW()),
-      headers: new Headers({'Content-Type': `application/json`})
+      headers: new Headers({'Content-Type': `application/json`}),
     })
       .then((response) => response.json())
       .then(FilmModel.parseFilm);
@@ -60,7 +60,8 @@ const API = class {
     return this._load({
       url: `comments/${commentId}`,
       method: Method.DELETE,
-  })}
+    });
+  }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);

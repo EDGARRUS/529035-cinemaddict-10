@@ -4,7 +4,7 @@ export default class FilmModel {
     this.title = data[`film_info`][`title`];
     this.altTitle = data[`film_info`][`alternative_title`];
     this.description = data[`film_info`][`description`] || ``;
-    this.director =  data[`film_info`][`director`];
+    this.director = data[`film_info`][`director`];
     this.style = data[`film_info`][`genre`];
     this.poster = data[`film_info`][`poster`];
     this.releaseDate = data[`film_info`][`release`][`date`] ? new Date(data[`film_info`][`release`][`date`]) : null;
@@ -17,7 +17,7 @@ export default class FilmModel {
 
     this.commentsId = data[`comments`];
 
-    this.userRating = data[`user_details`][`personal_rating`] ? parseInt(data[`user_details`][`personal_rating`]) : 1;
+    this.userRating = data[`user_details`][`personal_rating`] ? parseInt(data[`user_details`][`personal_rating`], 10) : 1;
     this.addToFavorite = Boolean(data[`user_details`][`favorite`]);
     this.addToHistory = Boolean(data[`user_details`][`already_watched`]);
     this.addToWatchlist = Boolean(data[`user_details`][`watchlist`]);
@@ -45,14 +45,14 @@ export default class FilmModel {
         'actors': this.actors,
         'age_rating': this.age,
       },
-      'comments': this.commentsId,
+      'comments': this.commentsId.map((item) => item),
       'user_details': {
-        'personal_rating': this.userRating ? parseInt(this.userRating) : 1,
+        'personal_rating': this.userRating ? parseInt(this.userRating, 10) : 1,
         'favorite': this.addToFavorite,
         'already_watched': this.addToHistory,
         'watchlist': this.addToWatchlist,
-        'watching_date': this.watchingDate
-      }
+        'watching_date': this.watchingDate,
+      },
     };
   }
 

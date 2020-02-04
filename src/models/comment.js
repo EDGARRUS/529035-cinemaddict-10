@@ -3,8 +3,7 @@ export default class CommentModel {
     this.id = data[`id`];
     this.author = data[`author`];
     this.comment = data[`comment`];
-    // this.emotion = data[`emotion`];
-    this.emotion = 'smile';
+    this.emotion = data[`emotion`];
     this.date = data[`date`] ? new Date(data[`date`]) : null;
   }
 

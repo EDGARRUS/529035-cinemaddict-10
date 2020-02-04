@@ -3,11 +3,11 @@ import AbstractComponent from "./abstract-component";
 const createUserTemplate = (films) => {
   let userTitle = ``;
   if (films.length >= 21) {
-    userTitle = `movie buff`
-  } else if(films.length >= 11) {
-    userTitle = `fan`
-  } else if(films.length >= 1) {
-    userTitle = `novice`
+    userTitle = `movie buff`;
+  } else if (films.length >= 11) {
+    userTitle = `fan`;
+  } else if (films.length >= 1) {
+    userTitle = `novice`;
   }
 
   return (

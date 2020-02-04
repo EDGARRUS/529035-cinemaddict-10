@@ -1,17 +1,15 @@
 import API from './api.js';
-
 import {RenderPosition, render} from './utils/render.js';
-import {BoardComponent, StatFooterComponent} from './components/board.js';
+import {StatFooterComponent} from './components/board.js';
 import {NavMenuComponent} from './components/nav-menu.js';
 import {UserComponent} from './components/user';
 import {PageController} from "./controllers/page";
-// import {generateFilms} from "./components/film-card";
 import FilmsModel from './models/films.js';
-import {FilterComponent} from "./components/filter";
-import {FilterType, FilterController} from "./controllers/filter";
+import {FilterController} from "./controllers/filter";
 import {StatisticComponent} from "./components/statistic";
 import {MenuItem} from "./components/nav-menu";
 import {LoadingScreenComponent} from "./components/no-films";
+
 const AUTHORIZATION = `Basic eo0w590ik29889a`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 const api = new API(END_POINT, AUTHORIZATION);
@@ -67,7 +65,3 @@ navMenuComponent.setOnChange((menuItem) => {
       break;
   }
 });
-
-
-
-

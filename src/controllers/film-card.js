@@ -3,7 +3,7 @@ import {FilmCardPopupCommentComponent, FilmCardPopupComponent} from "../componen
 import {remove, replace, render, RenderPosition} from "../utils/render";
 import {FilmComment} from "./film-comment";
 import API from "../api";
-import FilmModel from "../models/film"
+import FilmModel from "../models/film";
 import CommentModel from "../models/comment";
 import CommentsModel from "../models/comments";
 
@@ -66,7 +66,9 @@ export class FilmCardController {
     });
 
 
-    this._filmCardComponent.setOpenFilmClickHandler(() => {this.openFilmPopup(film)});
+    this._filmCardComponent.setOpenFilmClickHandler(() => {
+      this.openFilmPopup(film);
+    });
 
     if (oldFilmCardComponent) {
 
@@ -79,7 +81,7 @@ export class FilmCardController {
 
   filmPopupClose() {
     remove(this._filmCardPopupComponent);
-  };
+  }
 
   onEscKeyDown(evt) {
     const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
@@ -87,7 +89,7 @@ export class FilmCardController {
       this.filmPopupClose();
       document.removeEventListener(`keydown`, this.onEscKeyDown);
     }
-  };
+  }
 
   openFilmPopup(film) {
     this._onViewChange();
@@ -112,15 +114,15 @@ export class FilmCardController {
         api.createComment(new CommentModel(newData), film.id)
           .then((result) => {
             this._commentsModel.addComment(result.comments[result.comments.length - 1]);
-            return result.comments[result.comments.length - 1] ;
+            return result.comments[result.comments.length - 1];
           }).then((newComment) => {
 
-          controller.rerender(this._commentsModel.getCommentsAll());
-          const newFilm = FilmModel.clone(film);
-          newFilm.commentsId.push(newComment.id);
-          this._onDataChange(this, film, newFilm);
+            controller.rerender(this._commentsModel.getCommentsAll());
+            const newFilm = FilmModel.clone(film);
+            newFilm.commentsId.push(newComment.id);
+            this._onDataChange(this, film, newFilm);
 
-        })
+          })
           .catch(() => {
             controller.shake();
           });
@@ -131,9 +133,13 @@ export class FilmCardController {
         api.deleteComment(oldData)
           .then(() => {
             this._commentsModel.removeComment(oldData);
-            /* this._updateComments(this._showingCommentsCount); */
-          }).then(() => {controller.rerender(this._commentsModel.getCommentsAll())})
-          .catch(() => {controller.rerender(this._commentsModel.getCommentsAll()); controller.shake()});
+          }).then(() => {
+            controller.rerender(this._commentsModel.getCommentsAll());
+          })
+          .catch(() => {
+            controller.rerender(this._commentsModel.getCommentsAll());
+            controller.shake();
+          });
 
 
       }
@@ -142,46 +148,86 @@ export class FilmCardController {
     });
 
 
-    api.getFilmComments(film.id).then((data) => {this._commentsModel.setComments(data); filmCommentController.render(this._commentsModel.getCommentsAll())});
-
-    // Повторный эвент работает криво на кнопках - ничего не меняется
+    api.getFilmComments(film.id).then((data) => {
+      this._commentsModel.setComments(data);
+      filmCommentController.render(this._commentsModel.getCommentsAll());
+    });
 
     this._filmCardPopupComponent.setWatchlistButtonClickHandler(() => {
+      film = newFilmData ? newFilmData : film;
       const newFilm = FilmModel.clone(film);
       newFilm.addToWatchlist = !film.addToWatchlist;
       this._onDataChange(this, film, newFilm);
+      newFilmData = newFilm;
     });
 
     this._filmCardPopupComponent.setFavoriteButtonClickHandler(() => {
+      film = newFilmData ? newFilmData : film;
       const newFilm = FilmModel.clone(film);
       newFilm.addToFavorite = !film.addToFavorite;
       this._onDataChange(this, film, newFilm);
+      newFilmData = newFilm;
     });
 
+    let newFilmData = null;
+
     this._filmCardPopupComponent.setHistoryButtonClickHandler(() => {
-      console.log(`Сработал клик вызова Оценки`);
-      const newFilm = FilmModel.clone(film);
-      console.log(`В старом фильме: ${film.addToHistory}`);
-      newFilm.addToHistory= !film.addToHistory;
-      console.log(`В новом фильме: ${newFilm.addToHistory}`);
+      film = newFilmData ? newFilmData : film;
+      let newFilm = FilmModel.clone(film);
+      newFilm.addToHistory = !film.addToHistory;
 
       if (!newFilm.addToHistory) {
         newFilm.userRating = 1;
       }
 
       this._onDataChange(this, film, newFilm);
-      this._filmCardPopupComponent.renderUserRatingForm(newFilm);
-      this._filmCardPopupComponent.rerenderUserRating(newFilm);
+      newFilmData = newFilm;
+
+
+      if (!newFilm.addToHistory) {
+        this._filmCardPopupComponent.renderUserRatingForm(newFilm);
+      } else {
+        this._filmCardPopupComponent.renderUserRatingForm(newFilm);
+        this._filmCardPopupComponent.setRateValueButtonClickHandler((rate) => {
+          newFilm = FilmModel.clone(film);
+          newFilm.userRating = parseInt(rate, 10);
+          this._onDataChange(this, film, newFilm);
+          this._filmCardPopupComponent.rerenderUserRating(newFilm);
+        });
+
+        this._filmCardPopupComponent.setClearRatingButtonClickHandler(() => {
+          newFilm = FilmModel.clone(film);
+          newFilm.addToHistory = false;
+          newFilm.userRating = 1;
+          this._onDataChange(this, film, newFilm);
+          this._filmCardPopupComponent.renderUserRatingForm(newFilm);
+          this._filmCardPopupComponent.rerenderUserRating(newFilm);
+        });
+      }
+
+
     });
 
-    this._filmCardPopupComponent.setRateValueButtonClickHandler((rate) => {
-      const newFilm = FilmModel.clone(film);
-      newFilm.userRating = parseInt(rate);
-      this._onDataChange(this, film, newFilm);
-      this._filmCardPopupComponent.rerenderUserRating(newFilm);
-    });
+    if (film.addToHistory) {
+      this._filmCardPopupComponent.setRateValueButtonClickHandler((rate) => {
+        let newFilm = FilmModel.clone(film);
+        newFilm.userRating = parseInt(rate, 10);
+        this._onDataChange(this, film, newFilm);
+        this._filmCardPopupComponent.rerenderUserRating(newFilm);
+      });
+
+      this._filmCardPopupComponent.setClearRatingButtonClickHandler(() => {
+        let newFilm = FilmModel.clone(film);
+        newFilm.addToHistory = false;
+        newFilm.userRating = 1;
+        this._onDataChange(this, film, newFilm);
+        this._filmCardPopupComponent.renderUserRatingForm(newFilm);
+        this._filmCardPopupComponent.rerenderUserRating(newFilm);
+      });
+    }
+
 
     this._filmCardPopupComponent.setCloseButtonClickHandler(this.filmPopupClose);
     document.addEventListener(`keydown`, this.onEscKeyDown);
-  };
+  }
 }

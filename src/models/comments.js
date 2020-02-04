@@ -1,6 +1,3 @@
-import {FilterType} from "../controllers/filter";
-import {getFilmsByFilter} from "../utils/filter";
-
 export default class CommentsModel {
   constructor() {
     this._comments = [];
@@ -16,7 +13,7 @@ export default class CommentsModel {
   }
 
   addComment(comment) {
-    this._comments = [].concat(this._comments, comment,);
+    this._comments = [].concat(this._comments, comment);
   }
 
   removeComment(id) {
@@ -28,7 +25,6 @@ export default class CommentsModel {
 
     this._comments = [].concat(this._comments.slice(0, index), this._comments.slice(index + 1));
 
-    // this._dataChangeHandlers.forEach((handler) => handler());
 
     return true;
   }

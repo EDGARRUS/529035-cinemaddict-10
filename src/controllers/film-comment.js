@@ -20,7 +20,7 @@ export class FilmComment {
   recoveryListeners() {
     this._filmCardPopupCommentComponent.setSubmitCommentHandler(this._submitCommentHandler);
     this._filmCardPopupCommentComponent.setDeleteCommentHandler(this._deleteCommentHandler);
-    this._filmCardPopupCommentComponent.setSmileCommentHandler(this._smileCommentHandler)
+    this._filmCardPopupCommentComponent.setSmileCommentHandler(this._smileCommentHandler);
   }
 
   rerender(comments) {
@@ -41,7 +41,7 @@ export class FilmComment {
 
       let smileActive = ``;
 
-      if(this._filmCardPopupCommentComponent.getElement().querySelector(`.film-details__add-emoji-label img`)) {
+      if (this._filmCardPopupCommentComponent.getElement().querySelector(`.film-details__add-emoji-label img`)) {
         smileActive = this._filmCardPopupCommentComponent.getElement().querySelector(`.film-details__add-emoji-label img`).id;
 
         const newComment = {
@@ -71,17 +71,17 @@ export class FilmComment {
     smilePlace.innerHTML = ``;
     const smileActive = e.target.id.substr(6);
     const smileMarkup = `<img id="${smileActive}" src="images/emoji/${smileActive}.png" width="55" height="55" alt="emoji">`;
-    smilePlace.insertAdjacentHTML('beforeend', smileMarkup);
-  };
+    smilePlace.insertAdjacentHTML(`beforeend`, smileMarkup);
+  }
 
   shake() {
-    this._filmCardPopupCommentComponent.getElement().querySelector('.film-details__new-comment').style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    this._filmCardPopupCommentComponent.getElement().querySelector(`.film-details__new-comment`).style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
 
-    this._filmCardPopupCommentComponent.getElement().querySelector('.film-details__comment-input').style.border = `1px solid red`;
+    this._filmCardPopupCommentComponent.getElement().querySelector(`.film-details__comment-input`).style.border = `1px solid red`;
 
     setTimeout(() => {
-      this._filmCardPopupCommentComponent.getElement().querySelector('.film-details__new-comment').style.animation = ``;
-      this._filmCardPopupCommentComponent.getElement().querySelector('.film-details__comment-input').style.border = ``;
+      this._filmCardPopupCommentComponent.getElement().querySelector(`.film-details__new-comment`).style.animation = ``;
+      this._filmCardPopupCommentComponent.getElement().querySelector(`.film-details__comment-input`).style.border = ``;
 
     }, SHAKE_ANIMATION_TIMEOUT);
   }

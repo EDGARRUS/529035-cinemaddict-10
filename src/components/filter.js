@@ -17,7 +17,7 @@ const createFilterTemplate = (filters) => {
 
   return `<div>
 <a id="filter__all" href="#all" class="main-navigation__item main-navigation__item--active">all</a>
-${filtersMarkup}</div>`
+${filtersMarkup}</div>`;
 };
 
 export class FilterComponent extends AbstractComponent {
@@ -32,8 +32,8 @@ export class FilterComponent extends AbstractComponent {
 
   setFilterChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
-      this.getElement().querySelector('.main-navigation__item--active').classList.remove('main-navigation__item--active');
-      evt.target.classList.add('main-navigation__item--active');
+      this.getElement().querySelector(`.main-navigation__item--active`).classList.remove(`main-navigation__item--active`);
+      evt.target.classList.add(`main-navigation__item--active`);
       const filterName = getFilterNameById(evt.target.id);
       handler(filterName);
     });

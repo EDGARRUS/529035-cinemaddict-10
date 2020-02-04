@@ -3,27 +3,15 @@ import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from 'moment';
 
-const Color = {
-  YELLOW: `yellow`,
-};
-
-const ColorValue = {
-  [Color.YELLOW]: `#ffe125`,
-};
-
-const getUniqItems = (item, index, array) => {
-  return array.indexOf(item) === index;
-};
-
 const getFilmsByDateRange = (films, dateFrom) => {
 
   const data = films.filter((film) => {
     const dueDate = film.watchingDate;
 
-    if(dateFrom) {
+    if (dateFrom) {
       return moment(dueDate).isBetween(dateFrom, new Date());
     } else {
-      return true
+      return true;
     }
   });
 
@@ -35,7 +23,9 @@ const calcCountFilmsStyle = (films, style) => {
 };
 
 const renderColorsChart = (colorsCtx, films) => {
-  if(!films) {return}
+  if (!films) {
+    return;
+  }
   const allStyles = [];
   films.forEach((film) => film.style.forEach((item) => {
     if (!allStyles.includes(item)) {
@@ -45,24 +35,24 @@ const renderColorsChart = (colorsCtx, films) => {
 
   return new Chart(colorsCtx, {
     plugins: [ChartDataLabels],
-    type: 'horizontalBar',
+    type: `horizontalBar`,
     data: {
       labels: allStyles,
       datasets: [{
         data: allStyles.map((style) => calcCountFilmsStyle(films, style)),
-        backgroundColor: 'orange',
+        backgroundColor: `orange`,
         datalabels: {
-          anchor: 'start',
+          anchor: `start`,
           color: `white`,
-          align: 'end',
+          align: `end`,
           offset: -20,
-        }
-      }]
+        },
+      }],
     },
     options: {
       plugins: {
         datalabels: {
-          anchor: 'start',
+          anchor: `start`,
           color: `white`,
         },
       },
@@ -75,9 +65,9 @@ const renderColorsChart = (colorsCtx, films) => {
       scales: {
         xAxes: [{
           ticks: {
-            display:false,
+            display: false,
             suggestedMin: 0,
-          }
+          },
         }],
         yAxes: [{
           ticks: {
@@ -87,7 +77,7 @@ const renderColorsChart = (colorsCtx, films) => {
           },
         }],
       },
-    }
+    },
   });
 };
 
@@ -95,11 +85,11 @@ const renderColorsChart = (colorsCtx, films) => {
 const createStatTemplate = (films, dateTo, dateFrom) => {
   let userTitle = ``;
   if (films.length >= 21) {
-    userTitle = `movie buff`
-  } else if(films.length >= 11) {
-    userTitle = `fan`
-  } else if(films.length >= 1) {
-    userTitle = `novice`
+    userTitle = `movie buff`;
+  } else if (films.length >= 11) {
+    userTitle = `fan`;
+  } else if (films.length >= 1) {
+    userTitle = `novice`;
   }
 
   const allStyles = [];
@@ -111,13 +101,17 @@ const createStatTemplate = (films, dateTo, dateFrom) => {
 
   const result = {};
   const values = allStyles.map((style) => calcCountFilmsStyle(films, style));
-  allStyles.forEach((key, i) => result[key] = values[i]);
+  allStyles.forEach((key, i) => {
+    result[key] = values[i];
+  });
   const maxValue = Math.max.apply(null, values);
-  const topGenre = Object.keys(result).find(key => result[key] === maxValue);
+  const topGenre = Object.keys(result).find((key) => result[key] === maxValue);
 
   const filmsCountIsWatched = getFilmsByDateRange(films, dateFrom);
   let timeLength = 0;
-  filmsCountIsWatched.map((it) => timeLength += it.duration);
+  filmsCountIsWatched.map((it) => {
+    timeLength += it.duration;
+  });
   const hours = Math.floor(timeLength / 60);
   const minutes = timeLength % 60;
 
@@ -168,15 +162,15 @@ const createStatTemplate = (films, dateTo, dateFrom) => {
       <canvas class="statistic__chart" width="1000"></canvas>
     </div>
 
-  </section>`
+  </section>`;
 };
 
 const filterTime = {
   'all-time': null,
-  'today': moment().startOf('day').format(),
-  'week': moment().subtract(7, 'days').format(),
-  'month': moment().subtract(1, 'months').format(),
-  'year': moment().subtract(1, 'years').format(),
+  'today': moment().startOf(`day`).format(),
+  'week': moment().subtract(7, `days`).format(),
+  'month': moment().subtract(1, `months`).format(),
+  'year': moment().subtract(1, `years`).format(),
 };
 
 
@@ -189,7 +183,7 @@ export class StatisticComponent extends AbstractSmartComponent {
     this._dateTo = dateTo;
 
     this._filmsChart = null;
-    this._filter = filterTime['all-time'];
+    this._filter = filterTime[`all-time`];
 
     this._renderCharts();
   }

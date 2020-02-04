@@ -26,7 +26,7 @@ export class FilterController {
     this.render();
   }
 
-  render () {
+  render() {
 
     const container = this._container;
     const allFilms = this._filmsModel.getFilmsAll();
@@ -39,7 +39,6 @@ export class FilterController {
     });
 
     const oldComponent = this._filterComponent;
-
 
 
     this._filterComponent = new FilterComponent(filters);
