@@ -17,7 +17,7 @@ export default class FilmModel {
 
     this.commentsId = data[`comments`];
 
-    this.userRating = data[`user_details`][`personal_rating`] ? parseInt(data[`user_details`][`personal_rating`], 10) : 1;
+    this.userRating = data[`user_details`][`personal_rating`] ? parseInt(data[`user_details`][`personal_rating`], 10) : 0;
     this.addToFavorite = Boolean(data[`user_details`][`favorite`]);
     this.addToHistory = Boolean(data[`user_details`][`already_watched`]);
     this.addToWatchlist = Boolean(data[`user_details`][`watchlist`]);
@@ -47,7 +47,7 @@ export default class FilmModel {
       },
       'comments': this.commentsId.map((item) => item),
       'user_details': {
-        'personal_rating': this.userRating ? parseInt(this.userRating, 10) : 1,
+        'personal_rating': this.userRating ? parseInt(this.userRating, 10) : 0,
         'favorite': this.addToFavorite,
         'already_watched': this.addToHistory,
         'watchlist': this.addToWatchlist,

@@ -157,6 +157,7 @@ export class FilmCardPopupComponent extends AbstractSmartComponent {
     this._historyButtonClickHandler = null;
     this._favoriteButtonClickHandler = null;
     this._rateValueButtonClickHandler = null;
+    this._clearRatingButtonClickHandler = null;
     this._subscribeOnEvents();
   }
 
@@ -181,6 +182,12 @@ export class FilmCardPopupComponent extends AbstractSmartComponent {
   renderUserRatingForm(filmData) {
     const container = this.getElement().querySelector(`.form-details__middle-container`);
     container.innerHTML = `${filmData.addToHistory ? createRateFormMarkup(filmData) : ``}`;
+  }
+
+  clearUserRatingForm() {
+    this.getElement().querySelectorAll(`.film-details__user-rating-input`).forEach((input) => {
+      input.checked = false;
+    });
   }
 
   rerenderUserRating(filmData) {

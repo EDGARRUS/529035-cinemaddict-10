@@ -178,7 +178,7 @@ export class FilmCardController {
       newFilm.watchingDate = moment().format();
 
       if (!newFilm.addToHistory) {
-        newFilm.userRating = 1;
+        newFilm.userRating = 0;
       }
 
       this._onDataChange(this, film, newFilm);
@@ -190,6 +190,7 @@ export class FilmCardController {
       } else {
         this._filmCardPopupComponent.renderUserRatingForm(newFilm);
         this._filmCardPopupComponent.setRateValueButtonClickHandler((rate) => {
+          film = newFilmData ? newFilmData : film;
           newFilm = FilmModel.clone(film);
           newFilm.userRating = parseInt(rate, 10);
           this._onDataChange(this, film, newFilm);
@@ -197,11 +198,11 @@ export class FilmCardController {
         });
 
         this._filmCardPopupComponent.setClearRatingButtonClickHandler(() => {
+          film = newFilmData ? newFilmData : film;
           newFilm = FilmModel.clone(film);
-          newFilm.addToHistory = false;
-          newFilm.userRating = 1;
+          newFilm.userRating = 0;
           this._onDataChange(this, film, newFilm);
-          this._filmCardPopupComponent.renderUserRatingForm(newFilm);
+          this._filmCardPopupComponent.clearUserRatingForm();
           this._filmCardPopupComponent.rerenderUserRating(newFilm);
         });
       }
@@ -212,7 +213,7 @@ export class FilmCardController {
     if (film.addToHistory) {
       this._filmCardPopupComponent.setRateValueButtonClickHandler((rate) => {
         film = newFilmData ? newFilmData : film;
-        let newFilm = FilmModel.clone(film);
+        const newFilm = FilmModel.clone(film);
         newFilm.userRating = parseInt(rate, 10);
         this._onDataChange(this, film, newFilm);
         this._filmCardPopupComponent.rerenderUserRating(newFilm);
@@ -221,11 +222,10 @@ export class FilmCardController {
 
       this._filmCardPopupComponent.setClearRatingButtonClickHandler(() => {
         film = newFilmData ? newFilmData : film;
-        let newFilm = FilmModel.clone(film);
-        newFilm.addToHistory = false;
-        newFilm.userRating = 1;
+        const newFilm = FilmModel.clone(film);
+        newFilm.userRating = 0;
         this._onDataChange(this, film, newFilm);
-        this._filmCardPopupComponent.renderUserRatingForm(newFilm);
+        this._filmCardPopupComponent.clearUserRatingForm();
         this._filmCardPopupComponent.rerenderUserRating(newFilm);
         newFilmData = FilmModel.clone(newFilm);
       });
