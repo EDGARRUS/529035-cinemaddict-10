@@ -1,5 +1,5 @@
 import {getFilmsByFilter} from "../utils/filter";
-import {FilterComponent} from "../components/filter";
+import FilterComponent from "../components/filter";
 import {RenderPosition, replace, render} from "../utils/render";
 
 export const FilterType = {

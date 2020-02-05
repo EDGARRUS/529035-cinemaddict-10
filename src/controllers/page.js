@@ -1,6 +1,6 @@
 import {remove, render, RenderPosition} from "../utils/render";
 import {FilmsListComponent} from "../components/films-list";
-import {FilmsSectionComponent} from "../components/films-section";
+import FilmsSectionComponent from "../components/films-section";
 import NoFilmsComponent from "../components/no-films";
 import ShowMoreButtonComponent from "../components/show-more-button";
 import SortMenuComponent, {SortType} from "../components/sort-menu";
