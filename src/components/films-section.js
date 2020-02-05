@@ -11,7 +11,7 @@ const createFilmSectionTemplate = (title, id) => {
   );
 };
 
-export class FilmsSectionComponent extends AbstractComponent {
+export default class FilmsSectionComponent extends AbstractComponent {
   constructor(title, id) {
     super();
     this._title = title;

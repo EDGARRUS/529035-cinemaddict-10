@@ -6,7 +6,7 @@ const createShowMoreButtonTemplate = () => {
   );
 };
 
-export class ShowMoreButtonComponent extends AbstractComponent {
+export default class ShowMoreButtonComponent extends AbstractComponent {
   getTemplate() {
     return createShowMoreButtonTemplate();
   }

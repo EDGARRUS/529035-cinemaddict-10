@@ -12,7 +12,7 @@ const createNavMenuTemplate = () => {
   );
 };
 
-export class NavMenuComponent extends AbstractComponent {
+export default class NavMenuComponent extends AbstractComponent {
   constructor() {
     super();
   }

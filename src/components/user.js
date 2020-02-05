@@ -19,7 +19,7 @@ const createUserTemplate = (films) => {
   );
 };
 
-export class UserComponent extends AbstractComponent {
+export default class UserComponent extends AbstractComponent {
   constructor(filmsWithWatchDate) {
     super();
     this._filmsWithWatchDate = filmsWithWatchDate;

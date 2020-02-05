@@ -175,7 +175,7 @@ const filterTime = {
 };
 
 
-export class StatisticComponent extends AbstractSmartComponent {
+export default class StatisticComponent extends AbstractSmartComponent {
   constructor(films, dateTo, dateFrom) {
     super();
 

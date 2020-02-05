@@ -6,7 +6,7 @@ const createStatFooterTemplate = (array) => {
   );
 };
 
-export class StatFooterComponent extends AbstractComponent {
+export default class StatFooterComponent extends AbstractComponent {
   constructor(films) {
     super();
     this._films = films;

@@ -9,7 +9,7 @@ const createLoadingScreenTemplate = () => {
 };
 
 
-export class LoadingScreenComponent extends AbstractComponent {
+export default class LoadingScreenComponent extends AbstractComponent {
   getTemplate() {
     return createLoadingScreenTemplate();
   }

@@ -4,7 +4,7 @@ import he from "he";
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
 
-export class FilmComment {
+export default class FilmComment {
   constructor(container, onDataChange) {
     this._container = container;
     this._onDataChange = onDataChange;

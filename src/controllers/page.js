@@ -1,10 +1,10 @@
 import {remove, render, RenderPosition} from "../utils/render";
 import {FilmsListComponent} from "../components/films-list";
 import {FilmsSectionComponent} from "../components/films-section";
-import {NoFilmsComponent} from "../components/no-films";
-import {ShowMoreButtonComponent} from "../components/show-more-button";
-import {SortMenuComponent, SortType} from "../components/sort-menu";
-import {FilmCardController} from "./film-card";
+import NoFilmsComponent from "../components/no-films";
+import ShowMoreButtonComponent from "../components/show-more-button";
+import SortMenuComponent, {SortType} from "../components/sort-menu";
+import FilmCardController from "./film-card";
 import {BoardComponent} from "../components/board";
 
 
@@ -23,7 +23,7 @@ const renderFilms = (filmListElement, filmsData, onDataChange, onViewChange) => 
   });
 };
 
-export class PageController {
+export default class PageController {
   constructor(container, filmsModel, api) {
     this._filmsModel = filmsModel;
     this._api = api;

@@ -8,7 +8,7 @@ export const FilterType = {
   HISTORY: `history`,
 };
 
-export class FilterController {
+export default class FilterController {
   constructor(container, filmsModel) {
     this._container = container;
     this._filmsModel = filmsModel;

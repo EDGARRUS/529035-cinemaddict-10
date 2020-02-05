@@ -2,7 +2,7 @@ import {FilmCardComponent} from "../components/film-card";
 import {FilmCardPopupComponent} from "../components/film-card-popup";
 import {FilmCardPopupCommentComponent} from "../components/film-comments";
 import {remove, replace, render, RenderPosition} from "../utils/render";
-import {FilmComment} from "./film-comment";
+import FilmComment from "./film-comment";
 import API from "../api";
 import FilmModel from "../models/film";
 import CommentModel from "../models/comment";
@@ -14,7 +14,7 @@ const Mode = {
   POPUP: `popup`,
 };
 
-export class FilmCardController {
+export default class FilmCardController {
   constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._onDataChange = onDataChange;
